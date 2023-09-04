@@ -34,7 +34,9 @@ public class Library {
 			System.out.println("1. 도서등록");
 			System.out.println("2. 도서대여");
 			System.out.println("3. 도서반납");
-			System.out.println("4. 회원등록");
+			System.out.println("4. 도서삭제");
+			System.out.println("5. 회원등록");
+			System.out.println("6. 회원삭제");
 			System.out.println("9. 프로그램 종료");
 			System.out.println("============================");
 			System.out.println("원하시는 서비스 번호를 입력하세요 : ");
@@ -54,8 +56,14 @@ public class Library {
 					returnBook();
 					break;
 				case 4:
+					bookList.remove(this.deleteBook());				
+					break;
+				case 5:
 					printHumanList(humanList);
 					humanList.add(this.createHuman());
+					break;
+				case 6:
+					humanList.remove(this.deleteHuman());				
 					break;
 				case 9:
 					System.out.println("프로그램을 종료합니다.");
@@ -64,6 +72,66 @@ public class Library {
 					System.out.println("잘못 입력하셨습니다.");
 			}
 		}
+	}
+	
+	public Human deleteHuman() {             //리턴을 객체로 해주면 중간에 끊근게 안됨...조회했는데 다 빌린상태라 삭제할게 없으면?
+		Human selectHuman = null;
+		boolean isTrue =true;
+		while(isTrue) {{
+			printHumanList(humanList);
+			System.out.print("어떤 회원을 삭제하시겠습니까?(id입력) : ");
+			try {
+			int selectKey = sc.nextInt();			
+			sc.nextLine();			
+			for (Human human : humanList) {
+				if (selectKey == human.getKey()) {
+					if (human.getRentBookCode() != 0) {
+						System.out.println("책 빌려간 놈임 삭제하기전 받아야함");
+						
+						
+					} else {
+						selectHuman = human;	
+					}
+				}
+			}			
+		}catch(InputMismatchException x) {
+			System.out.println("제대로 된 사람 코드 입력하셈 숫자로");
+			sc.nextLine();
+	}
+		}
+		}
+		return selectHuman;
+	}
+	
+	public Book deleteBook() {
+		Book selectBook = null;
+		
+		while(selectBook == null) {
+			printBookList(bookList);
+			System.out.println("어떤 책을 삭제하시겠습니까?(도서코드입력) : ");
+			
+			try {
+			int selectCode = sc.nextInt();		
+			sc.nextLine();
+		
+			for(Book book : bookList) {
+				if(book.getCode()==selectCode) {
+					if(book.getIsRent())
+						System.out.println("대여 중이라 삭제 하실 수 없습니다");
+						
+					else
+						selectBook = book;			
+				}
+			}
+			}catch(InputMismatchException x) {
+					System.out.println("제대로 된 책 코드 입력하셈 숫자로");
+					sc.nextLine();
+			}
+		}
+		return selectBook;
+		
+		
+		
 	}
 
 	// 도서 대여를 위한 메서드
@@ -151,7 +219,7 @@ public class Library {
 				
 		
 		}
-		System.out.println("올바른 회원id를 입력하세요");
+	
 		//리스트에 있는 사람중 어떤 사람의 책을 반납할지 id를 입력받는다.
 		//해당 사람을 selectHuman이라는 변수를 만들어 담아준다.
 		//해당 사람이 빌린 책을 rentBookCode를 이용해서 bookList에서 찾아준다.
