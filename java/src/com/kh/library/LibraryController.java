@@ -7,7 +7,11 @@ public class LibraryController {
 	
 	
 	public void printHumanList() {
-		ArrayList<Human> HmList = new LibraryDao().printHumanList();
+		ArrayList<Human> HmList = new LibraryService().printHumanList();
+		if(HmList.isEmpty()) {
+			new LibraryMenu().displayNoData("전체 회원 조회 결과가 없습니다");
+		}else
+			new LibraryMenu().displayHumanList(HmList);
 
 	}
 	
@@ -22,6 +26,17 @@ public class LibraryController {
 			new LibraryMenu().displayBookList(BkList);
 		}
 
+	}
+	
+	public void createBook(String title, String author, String code) {
+		Book bk = new Book(title, author, code);
+		int result = new LibraryService().createBook(bk);
+		
+		if (result > 0) {
+			new LibraryMenu().displaySuccess("성공적으로 회원 추가를 완료하였습니다");
+		}else
+			new LibraryMenu().displayFail("회원 추가에 실패하였습니다");
+		
 	}
 
 }

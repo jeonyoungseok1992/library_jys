@@ -4,17 +4,16 @@ package com.kh.library;
 public class Book {
 	private String title;
 	private String author;
-	private int code;
-	private boolean isRent;
+	private String code;
+	private int isRent = 1;
 	
 	
 	
 	
-	public Book(String title, String author, int code) {
+	public Book(String title, String author, String code) {
 		this.title = title;
 		this.author = author;
 		this.code = code;
-		this.isRent = true;
 	}
 	
 //	public Book(String title, String author, int code, Boolean isRent) {
@@ -25,7 +24,7 @@ public class Book {
 //	}
 	
 	public Book() {
-		this.isRent = true;
+		
 		
 	}
 	
@@ -55,25 +54,25 @@ public class Book {
 
 
 
-	public int getCode() {
+	public String getCode() {
 		return code;
 	}
 
 
 
-	public void setCode(int code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
 
 
 
-	public boolean getIsRent() {
+	public int getIsRent() {
 		return isRent;
 	}
 
 
 
-	public void setIsRent(boolean isRent) {
+	public void setIsRent(int isRent) {
 		this.isRent = isRent;
 	}
 
@@ -81,6 +80,6 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return this.code + "\t" + this.title + "\t" + this.author + "\t" + (this.isRent ? "대여가능": "대여불가");
+		return this.code + "\t" + this.title + "\t" + this.author + "\t" + (this.isRent == 1 ? "대여가능": "대여불가");
 	}
 }

@@ -2,34 +2,12 @@ package com.kh.library;
 
 import java.util.*;
 
-
-
-// 회원생성, 수정, 삭제
-// 도서 등록,수정,삭제
-// 및 도서대여관리
 public class LibraryMenu {
 	LibraryController lc = new LibraryController();
-	// 책들을 저장한 공간
-	ArrayList<Book> bookList;
-	// 회원들을 저장할 공간
-	ArrayList<Human> humanList;
-	Scanner sc;
 
-	public LibraryMenu() {
-		bookList = new ArrayList<>();
-		bookList.add(new Book("간디", "최지원", 152));
-		bookList.add(new Book("이순신", "김수민", 242));
-		bookList.add(new Book("잔다르크", "이철수", 457));
-		
-		humanList = new ArrayList<>();
-		humanList.add(new Human(1, "최지원", "910524", 42, 'F'));
-		humanList.add(new Human(2, "최수민", "700224", 32, 'M'));
-		humanList.add(new Human(3, "박지수", "200114", 11, 'F'));
-		sc = new Scanner(System.in);
-	}
+	Scanner sc = new Scanner(System.in);
 
-	// 도서등록, 도서대여, 도서반납
-	// 을 선택하는 메인화면 출력
+
 	public void mainMenu() {
 		int number = 0;
 		while (number != 9) {
@@ -52,7 +30,7 @@ public class LibraryMenu {
 			switch (number) {
 				case 1:
 					lc.printBookList();
-					bookList.add(this.createBook());
+					createBook();
 					break;
 				case 2:
 					rentBook();
@@ -61,14 +39,14 @@ public class LibraryMenu {
 					returnBook();
 					break;
 				case 4:
-					bookList.remove(this.deleteBook());				
+					//bookList.remove(this.deleteBook());				
 					break;
 				case 5:
 					lc.printHumanList();
-					humanList.add(this.createHuman());
+					//humanList.add(this.createHuman());
 					break;
 				case 6:
-					humanList.remove(this.deleteHuman());				
+					//humanList.remove(this.deleteHuman());				
 					break;
 				case 7:
 					lc.printBookList();			
@@ -349,11 +327,11 @@ public class LibraryMenu {
 	}
 
 	// 사용자에 입력에 따라 책객체를 생성해서 반환한다.
-	public Book createBook() {
+	public void createBook() {
 		// 입력받기위한 객체
 
 		String title, author;
-		int code;
+		String code;
 		// 제목, 작가, 책코드를 입력받는다.
 
 		System.out.print("책 제목을 입력하세요 : ");
@@ -361,13 +339,10 @@ public class LibraryMenu {
 		System.out.print("작가를 입력하세요 : ");
 		author = sc.nextLine();
 		System.out.print("책 코유코드를 입력하세요. : ");
-		code = sc.nextInt();
-		sc.nextLine();
+		code = sc.nextLine();
+		
 
-		Book book = new Book(title, author, code);
-		System.out.println(book.toString() + " 생성완료");
-
-		return book;
+		lc.createBook(title, author, code);
 	}
 	
 	//-------------------------------응답화면------------------------------------
@@ -384,5 +359,22 @@ public class LibraryMenu {
 			System.out.println(bk);	
 		}
 		System.out.println("--------------------------------");
+	}
+	
+	public void displayHumanList(ArrayList<Human> HmList) {
+		System.out.println("--------------------------------");
+		
+		System.out.println("번호 \t 제목 \t 작가 \t 대여여부");
+		for(Human hm : HmList) {
+			System.out.println(hm);	
+		}
+		System.out.println("--------------------------------");
+	}
+	
+	public void displaySuccess(String message) {
+		System.out.println(message);
+	}
+	public void displayFail(String message) {
+		System.out.println(message);
 	}
 }

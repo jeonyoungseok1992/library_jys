@@ -3,9 +3,22 @@ package com.kh.library;
 // Human객체를 만들기위한 클레스
 public class Human {
 	private int key; // 사람을 식별할 수 있는 key
-	private int age;
 	private String name;
 	private String residentNumber;
+	private int age;
+	
+	public Human() {
+		
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
 	private char gender;
 	private int rentBookCode;
 	
@@ -18,6 +31,14 @@ public class Human {
 		this.rentBookCode = 0;
 	}
 	
+	public String getResidentNumber() {
+		return residentNumber;
+	}
+
+	public void setResidentNumber(String residentNumber) {
+		this.residentNumber = residentNumber;
+	}
+
 	public String getName() {
 		return this.name;
 	}
