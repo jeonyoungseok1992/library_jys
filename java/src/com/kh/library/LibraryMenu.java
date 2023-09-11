@@ -2,17 +2,20 @@ package com.kh.library;
 
 import java.util.*;
 
+
+
 // 회원생성, 수정, 삭제
 // 도서 등록,수정,삭제
 // 및 도서대여관리
-public class Library {
+public class LibraryMenu {
+	LibraryController lc = new LibraryController();
 	// 책들을 저장한 공간
 	ArrayList<Book> bookList;
 	// 회원들을 저장할 공간
 	ArrayList<Human> humanList;
 	Scanner sc;
 
-	public Library() {
+	public LibraryMenu() {
 		bookList = new ArrayList<>();
 		bookList.add(new Book("간디", "최지원", 152));
 		bookList.add(new Book("이순신", "김수민", 242));
@@ -37,6 +40,8 @@ public class Library {
 			System.out.println("4. 도서삭제");
 			System.out.println("5. 회원등록");
 			System.out.println("6. 회원삭제");
+			System.out.println("7. 도서조회");
+			System.out.println("8. 회원조회");
 			System.out.println("9. 프로그램 종료");
 			System.out.println("============================");
 			System.out.println("원하시는 서비스 번호를 입력하세요 : ");
@@ -46,7 +51,7 @@ public class Library {
 			sc.nextLine();
 			switch (number) {
 				case 1:
-					printBookList(bookList);
+					lc.printBookList();
 					bookList.add(this.createBook());
 					break;
 				case 2:
@@ -59,11 +64,17 @@ public class Library {
 					bookList.remove(this.deleteBook());				
 					break;
 				case 5:
-					printHumanList(humanList);
+					lc.printHumanList();
 					humanList.add(this.createHuman());
 					break;
 				case 6:
 					humanList.remove(this.deleteHuman());				
+					break;
+				case 7:
+					lc.printBookList();			
+					break;
+				case 8:
+					lc.printHumanList();				
 					break;
 				case 9:
 					System.out.println("프로그램을 종료합니다.");
@@ -78,7 +89,7 @@ public class Library {
 		Human selectHuman = null;
 		boolean isTrue =true;
 		while(isTrue) {{
-			printHumanList(humanList);
+			lc.printHumanList();
 			System.out.print("어떤 회원을 삭제하시겠습니까?(id입력) : ");
 			try {
 			int selectKey = sc.nextInt();			
@@ -107,7 +118,7 @@ public class Library {
 		Book selectBook = null;
 		
 		while(selectBook == null) {
-			printBookList(bookList);
+			lc.printBookList();
 			System.out.println("어떤 책을 삭제하시겠습니까?(도서코드입력) : ");
 			
 			try {
@@ -199,7 +210,7 @@ public class Library {
 			return;
 		}
 		//tmpHumanList담긴 사람들을 보여준다.
-		printHumanList(tmpHumanList);
+		//lc.printHumanList(tmpHumanList);
 		
 		System.out.println("어떤 회원이 반납함?(id입력) : ");
 		
@@ -233,7 +244,7 @@ public class Library {
 	public Human selectHuman() {
 		Human selectHuman = null;
 		while(selectHuman == null) {{
-			printHumanList(humanList);
+			lc.printHumanList();
 			System.out.print("어떤 회원으로 대여하시겠습니까?(id입력) : ");
 			try {
 			int selectKey = sc.nextInt();
@@ -262,7 +273,7 @@ public class Library {
 		Book selectBook = null;
 		
 		while(selectBook == null) {
-			printBookList(bookList);
+			lc.printBookList();
 			System.out.println("어떤 책을 대여하시겠습니까?(도서코드입력) : ");
 			
 			try {
@@ -304,32 +315,10 @@ public class Library {
 	
 	
 	// bookList의 목록을 보여주는 메서드
-	public void printBookList(ArrayList<Book> tmpList) {
-		System.out.println("--------------------------------");
-		if (tmpList.size() > 0) {
-			System.out.println("번호 \t 제목 \t 작가 \t 대여여부");
-			for (Book book : tmpList) {
-				System.out.println(book.toString());
-			}
-		} else {
-			System.out.println("등록된 도서 없음");
-		}
-		System.out.println("--------------------------------");
-	}
+
 
 	// humanList의 목록을 보여주는 메서드
-	public void printHumanList(ArrayList<Human> tmpList) {
-		System.out.println("--------------------------------");
-		if (tmpList.size() > 0) {
-			System.out.println("ID \t 이름 \t 생년월일 \t 나이 \t 성별 \t 도서대여현황");
-			for (Human human : tmpList) {
-				System.out.println(human.toString());
-			}
-		} else {
-			System.out.println("등록된 회원 없음");
-		}
-		System.out.println("--------------------------------");
-	}
+
 
 	// 사용자에 입력에 따라 사람객체를 생성해서 반환한다.
 	public Human createHuman() {
@@ -379,5 +368,21 @@ public class Library {
 		System.out.println(book.toString() + " 생성완료");
 
 		return book;
+	}
+	
+	//-------------------------------응답화면------------------------------------
+	
+	public void displayNoData(String message) {
+		System.out.println(message);
+	}
+	
+	public void displayBookList(ArrayList<Book> BkList) {
+		System.out.println("--------------------------------");
+		
+		System.out.println("번호 \t 제목 \t 작가 \t 대여여부");
+		for(Book bk : BkList) {
+			System.out.println(bk);	
+		}
+		System.out.println("--------------------------------");
 	}
 }
