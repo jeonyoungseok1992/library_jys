@@ -6,9 +6,47 @@ public class Human {
 	private String name;
 	private String residentNumber;
 	private int age;
+	private char gender;
+	private int rentBookCode = 0;
 	
 	public Human() {
 		
+	}
+	
+	Human(int key, String name , String residentNumber, int age, char gender){
+		this.age = age;
+		this.name = name;
+		this.residentNumber = residentNumber;
+		this.gender = gender;
+		this.key = key;
+		this.rentBookCode = 0;
+	}
+
+
+
+	
+	public int getKey() {
+		return key;
+	}
+
+	public void setKey(int key) {
+		this.key = key;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getResidentNumber() {
+		return residentNumber;
+	}
+
+	public void setResidentNumber(String residentNumber) {
+		this.residentNumber = residentNumber;
 	}
 
 	public int getAge() {
@@ -19,47 +57,22 @@ public class Human {
 		this.age = age;
 	}
 
-	private char gender;
-	private int rentBookCode;
-	
-	Human(int key, String name , String residentNumber, int age, char gender){
-		this.age = age;
-		this.name = name;
-		this.residentNumber = residentNumber;
+	public char getGender() {
+		return gender;
+	}
+
+	public void setGender(char gender) {
 		this.gender = gender;
-		this.key = key;
-		this.rentBookCode = 0;
-	}
-	
-	public String getResidentNumber() {
-		return residentNumber;
 	}
 
-	public void setResidentNumber(String residentNumber) {
-		this.residentNumber = residentNumber;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-	
-	public int getKey() {
-		return this.key;
-	}
-	
 	public int getRentBookCode() {
-		return this.rentBookCode;
+		return rentBookCode;
 	}
-	
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+
 	public void setRentBookCode(int rentBookCode) {
 		this.rentBookCode = rentBookCode;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.key + "\t" + this.name + "\t" + 

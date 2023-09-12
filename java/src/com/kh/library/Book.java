@@ -10,10 +10,10 @@ public class Book {
 	
 	
 	
-	public Book(String title, String author, String code) {
+	public Book(String title, String author) {
 		this.title = title;
 		this.author = author;
-		this.code = code;
+
 	}
 	
 //	public Book(String title, String author, int code, Boolean isRent) {

@@ -21,15 +21,15 @@ public class LibraryController {
 		ArrayList<Book> BkList = new LibraryDao().printBookList();
 		
 		if(BkList.isEmpty()) {
-			new LibraryMenu().displayNoData("전체 조회 결과가 없습니다");
+			new LibraryMenu().displayNoData("전체 도서 조회 결과가 없습니다");
 		}else {
 			new LibraryMenu().displayBookList(BkList);
 		}
 
 	}
 	
-	public void createBook(String title, String author, String code) {
-		Book bk = new Book(title, author, code);
+	public void createBook(String title, String author) {
+		Book bk = new Book(title, author);
 		int result = new LibraryService().createBook(bk);
 		
 		if (result > 0) {

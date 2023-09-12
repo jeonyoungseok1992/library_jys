@@ -29,7 +29,6 @@ public class LibraryMenu {
 			sc.nextLine();
 			switch (number) {
 				case 1:
-					lc.printBookList();
 					createBook();
 					break;
 				case 2:
@@ -338,11 +337,11 @@ public class LibraryMenu {
 		title = sc.nextLine();
 		System.out.print("작가를 입력하세요 : ");
 		author = sc.nextLine();
-		System.out.print("책 코유코드를 입력하세요. : ");
-		code = sc.nextLine();
+//		System.out.print("책 코유코드를 입력하세요. : ");
+//		code = sc.nextLine();
 		
 
-		lc.createBook(title, author, code);
+		lc.createBook(title, author);
 	}
 	
 	//-------------------------------응답화면------------------------------------

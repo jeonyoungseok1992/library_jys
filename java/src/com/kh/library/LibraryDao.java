@@ -117,15 +117,13 @@ public class LibraryDao {
 
 		int result = 0;
 		
-		String sql = "insert into tb_book values(?,?,?,?)";
+		String sql = "insert into tb_book values(SEQ_BOOK.NEXTVAL,?,?,?)";
 		PreparedStatement pstmt = null;
 		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt = LibraryTemplate.getConnection().prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql);	
 			pstmt.setString(1,bk.getTitle());
 			pstmt.setString(2,bk.getAuthor());
-			pstmt.setString(3,bk.getCode());
-			pstmt.setInt(4,bk.getIsRent());
+			pstmt.setInt(3,bk.getIsRent());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 
