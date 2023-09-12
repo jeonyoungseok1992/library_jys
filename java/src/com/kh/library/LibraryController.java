@@ -33,10 +33,54 @@ public class LibraryController {
 		int result = new LibraryService().createBook(bk);
 		
 		if (result > 0) {
+			new LibraryMenu().displaySuccess("성공적으로 도서 추가를 완료하였습니다");
+		}else
+			new LibraryMenu().displayFail("도서 추가에 실패하였습니다");
+		
+	}
+	
+	public void createHuman(String name, String residentNumber, int age, char gender) {
+		Human human = new Human(name, residentNumber, age, gender);
+		int result = new LibraryService().createHuman(human);
+		if (result > 0) {
 			new LibraryMenu().displaySuccess("성공적으로 회원 추가를 완료하였습니다");
 		}else
 			new LibraryMenu().displayFail("회원 추가에 실패하였습니다");
-		
 	}
+	
+	public void deleteBook(int selectCode) {
+		int result = new LibraryService().deleteBook(selectCode);
+		if (result > 0) {
+			new LibraryMenu().displaySuccess("성공적으로 도서 삭제를 완료하였습니다");
+		}else
+			new LibraryMenu().displayFail("도서 삭제에 실패하였습니다");
+	}
+	
+	
+	public void deleteHuman(int selectCode) {
+		int result = new LibraryService().deleteHuman(selectCode);
+		if (result > 0) {
+			new LibraryMenu().displaySuccess("성공적으로 회원 삭제를 완료하였습니다");
+		}else
+			new LibraryMenu().displayFail("회원 삭제에 실패하였습니다");
+	}
+	
+	public void rentBook(int selectKey, int selectCode ) {
+		int result = new LibraryService().rentBook(selectKey, selectCode);
+		if (result > 0) {
+			new LibraryMenu().displaySuccess("성공적으로 도서 대여를 완료하였습니다");
+		}else
+			new LibraryMenu().displayFail("도서 대여에 실패하였습니다");
 
+	}
+	
+	public ArrayList<Human> checkHuman(){
+		ArrayList<Human> hmList = new LibraryService().checkHuman();
+		return hmList;
+	}
+	
+	public ArrayList<Book> checkBook(){
+		ArrayList<Book> bkList = new LibraryService().checkBook();
+		return bkList;
+	}
 }

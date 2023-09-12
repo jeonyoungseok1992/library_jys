@@ -7,19 +7,17 @@ public class Human {
 	private String residentNumber;
 	private int age;
 	private char gender;
-	private int rentBookCode = 0;
+	private int rentBookCode ;
 	
 	public Human() {
 		
 	}
 	
-	Human(int key, String name , String residentNumber, int age, char gender){
+	Human(String name , String residentNumber, int age, char gender){
 		this.age = age;
 		this.name = name;
 		this.residentNumber = residentNumber;
 		this.gender = gender;
-		this.key = key;
-		this.rentBookCode = 0;
 	}
 
 

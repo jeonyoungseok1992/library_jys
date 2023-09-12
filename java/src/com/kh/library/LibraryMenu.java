@@ -38,14 +38,13 @@ public class LibraryMenu {
 					returnBook();
 					break;
 				case 4:
-					//bookList.remove(this.deleteBook());				
+					deleteBook();
 					break;
 				case 5:
-					lc.printHumanList();
-					//humanList.add(this.createHuman());
+					createHuman();
 					break;
 				case 6:
-					//humanList.remove(this.deleteHuman());				
+					deleteHuman();
 					break;
 				case 7:
 					lc.printBookList();			
@@ -62,61 +61,45 @@ public class LibraryMenu {
 		}
 	}
 	
-	public Human deleteHuman() {             //리턴을 객체로 해주면 중간에 끊근게 안됨...조회했는데 다 빌린상태라 삭제할게 없으면?
-		Human selectHuman = null;
-		boolean isTrue =true;
-		while(isTrue) {{
+	public void deleteHuman() {             //리턴을 객체로 해주면 중간에 끊근게 안됨...조회했는데 다 빌린상태라 삭제할게 없으면?
+		boolean isTrue = true;
+		while(isTrue) {
 			lc.printHumanList();
-			System.out.print("어떤 회원을 삭제하시겠습니까?(id입력) : ");
+			System.out.println("어떤 회원을 삭제하시겠습니까?(회원코드입력) : ");
+			
 			try {
-			int selectKey = sc.nextInt();			
-			sc.nextLine();			
-			for (Human human : humanList) {
-				if (selectKey == human.getKey()) {
-					if (human.getRentBookCode() != 0) {
-						System.out.println("책 빌려간 놈임 삭제하기전 받아야함");
-						
-						
-					} else {
-						selectHuman = human;	
-					}
-				}
-			}			
-		}catch(InputMismatchException x) {
-			System.out.println("제대로 된 사람 코드 입력하셈 숫자로");
+			int selectCode = sc.nextInt();		
 			sc.nextLine();
-	}
+			lc.deleteHuman(selectCode);
+			isTrue = false;
+
+			}catch(InputMismatchException x) {
+					System.out.println("제대로 된 회원 코드(숫자)를 입력하세요");
+					sc.nextLine();
+			}
 		}
-		}
-		return selectHuman;
 	}
 	
-	public Book deleteBook() {
-		Book selectBook = null;
-		
-		while(selectBook == null) {
+	public void deleteBook() {
+	
+		boolean isTrue = true;
+		while(isTrue) {
 			lc.printBookList();
 			System.out.println("어떤 책을 삭제하시겠습니까?(도서코드입력) : ");
 			
 			try {
 			int selectCode = sc.nextInt();		
 			sc.nextLine();
-		
-			for(Book book : bookList) {
-				if(book.getCode()==selectCode) {
-					if(book.getIsRent())
-						System.out.println("대여 중이라 삭제 하실 수 없습니다");
-						
-					else
-						selectBook = book;			
-				}
-			}
+			lc.deleteBook(selectCode);
+			isTrue = false;
+
 			}catch(InputMismatchException x) {
-					System.out.println("제대로 된 책 코드 입력하셈 숫자로");
+					System.out.println("제대로 된 책 코드(숫자)를 입력하세요");
 					sc.nextLine();
 			}
 		}
-		return selectBook;
+		
+		
 		
 		
 		
@@ -124,49 +107,81 @@ public class LibraryMenu {
 
 	// 도서 대여를 위한 메서드
 	public void rentBook() {
-		//************************************************
-		//대여가능한 책이 있는지 검사
-		boolean isBookCheck = false; // 북을 빌릴 수 있는지 검사 결과값
-		boolean isHumanCheck = false; // 북을 빌릴 수 있는 사람이 있는지 검사 결과값
-		for (Book b : bookList) {
-			if (b.getIsRent()) {
-				isBookCheck = true;
-				break;
-			}
-		}
 		
-		// 북을 빌릴 수 있는 사람이 있는지 검사
-		for (Human h : humanList) {
-			if (h.getRentBookCode() == 0) {
-				isHumanCheck = true;
-				break;
-			}
-		}
-		// 없으면 없다고하고 리턴
-		// 대여를 할 수 있는 회원이 있는지 검사
-		//없으면 없다고하고 리턴
-		
-		
-		if (bookList.size() == 0 || !isBookCheck) {
-			System.out.println("도서등록이 필요합니다.");
-			return;
-		} else if (humanList.size() == 0 || !isHumanCheck) {
-			System.out.println("회원등록이 필요합니다.");
+		if(lc.checkHuman().isEmpty()) {
+			System.out.println("대여가능 한 회원이 없습니다");
 			return;
 		}
+		Boolean isBook = false;
+		for(Book bk : lc.checkBook()) {
+			if(bk.getIsRent() == 1) {
+				isBook = true;
+				break;
+			}	
+		}
+		
+		if(lc.checkBook().isEmpty() || !isBook) {
+			System.out.println("다 빌렸거나 책이 없습니다");
+			return;
+		}
+			
+						
+		lc.printHumanList();
+		System.out.print("어떤 회원으로 대여하시겠습니까?(id입력) : ");		
+		int selectKey = sc.nextInt();
+		sc.nextLine();
 		
 		
-		// 대여하는 사람을 선택하는 코드
-		Human selectHuman = selectHuman();
+		lc.printBookList();
+		System.out.println("어떤 책을 대여하시겠습니까?(도서코드입력) : ");
+		int selectCode = sc.nextInt();		
+		sc.nextLine();
 		
-		// 대여할 book을 선택하는 코드
-		Book selectBook = selectBook();
+		lc.rentBook(selectKey, selectCode );	
 		
-		//책을 대여해준다.
-		// 책에는 isRent상태를 false로 변경
-		// 사람은 대여책 코드를 등록시킨다.
-		selectHuman.setRentBookCode(selectBook.getCode());
-		selectBook.setIsRent(false);
+//		//************************************************
+//		//대여가능한 책이 있는지 검사
+//		boolean isBookCheck = false; // 북을 빌릴 수 있는지 검사 결과값
+//		boolean isHumanCheck = false; // 북을 빌릴 수 있는 사람이 있는지 검사 결과값
+//		for (Book b : bookList) {
+//			if (b.getIsRent() == 1) {
+//				isBookCheck = true;
+//				break;
+//			}
+//		}
+//		
+//		// 북을 빌릴 수 있는 사람이 있는지 검사
+//		for (Human h : humanList) {
+//			if (h.getRentBookCode() == 0) {
+//				isHumanCheck = true;
+//				break;
+//			}
+//		}
+//		// 없으면 없다고하고 리턴
+//		// 대여를 할 수 있는 회원이 있는지 검사
+//		//없으면 없다고하고 리턴
+//		
+//		
+//		if (bookList.size() == 0 || !isBookCheck) {
+//			System.out.println("도서등록이 필요합니다.");
+//			return;
+//		} else if (humanList.size() == 0 || !isHumanCheck) {
+//			System.out.println("회원등록이 필요합니다.");
+//			return;
+//		}
+//		
+//		
+//		// 대여하는 사람을 선택하는 코드
+//		Human selectHuman = selectHuman();
+//		
+//		// 대여할 book을 선택하는 코드
+//		Book selectBook = selectBook();
+//		
+//		//책을 대여해준다.
+//		// 책에는 isRent상태를 false로 변경
+//		// 사람은 대여책 코드를 등록시킨다.
+//		selectHuman.setRentBookCode(selectBook.getCode());
+//		selectBook.setIsRent(false);
 		
 	}
 	
@@ -298,31 +313,25 @@ public class LibraryMenu {
 
 
 	// 사용자에 입력에 따라 사람객체를 생성해서 반환한다.
-	public Human createHuman() {
+	public void createHuman() {
 		// 입력받기위한 객체
 		String name, residentNumber;
-		int age, key;
+		int age;
 		char gender;
 		// 이름, 나이, 주민등록번호, 성별을 입력받아 사람객체 한개를 생성한다.
 
 		System.out.print("이름을 입력하세요 : ");
 		name = sc.nextLine();
+		System.out.print("주민등록번호 앞 6자리를 입력하세요. : ");
+		residentNumber = sc.nextLine();
 		System.out.print("나이를 입력하세요 : ");
 		age = sc.nextInt();
 		sc.nextLine();
-		System.out.print("주민등록번호 앞 6자리를 입력하세요. : ");
-		residentNumber = sc.nextLine();
 		System.out.print("성별을 입력해주세요.(남 : M, 여자는: F) : ");
 		gender = sc.nextLine().toUpperCase().charAt(0);
 
-		System.out.print("고객 고유코드를 입력하세요. : ");
-		key = sc.nextInt();
-		sc.nextLine();
 
-		Human human = new Human(key, name, residentNumber, age, gender);
-		System.out.println(human.toString() + " 생성완료");
-
-		return human;
+		lc.createHuman(name, residentNumber, age, gender);
 	}
 
 	// 사용자에 입력에 따라 책객체를 생성해서 반환한다.
@@ -363,7 +372,7 @@ public class LibraryMenu {
 	public void displayHumanList(ArrayList<Human> HmList) {
 		System.out.println("--------------------------------");
 		
-		System.out.println("번호 \t 제목 \t 작가 \t 대여여부");
+		System.out.println("번호 \t 이름 \t 주민번호\t나이\t성별\t 대여여부");
 		for(Human hm : HmList) {
 			System.out.println(hm);	
 		}

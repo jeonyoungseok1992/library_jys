@@ -4,8 +4,8 @@ package com.kh.library;
 public class Book {
 	private String title;
 	private String author;
-	private String code;
-	private int isRent = 1;
+	private int code;
+	private int isRent ;
 	
 	
 	
@@ -54,13 +54,13 @@ public class Book {
 
 
 
-	public String getCode() {
+	public int getCode() {
 		return code;
 	}
 
 
 
-	public void setCode(String code) {
+	public void setCode(int code) {
 		this.code = code;
 	}
 
