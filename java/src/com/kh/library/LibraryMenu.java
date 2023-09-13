@@ -139,49 +139,7 @@ public class LibraryMenu {
 		
 		lc.rentBook(selectKey, selectCode );	
 		
-//		//************************************************
-//		//대여가능한 책이 있는지 검사
-//		boolean isBookCheck = false; // 북을 빌릴 수 있는지 검사 결과값
-//		boolean isHumanCheck = false; // 북을 빌릴 수 있는 사람이 있는지 검사 결과값
-//		for (Book b : bookList) {
-//			if (b.getIsRent() == 1) {
-//				isBookCheck = true;
-//				break;
-//			}
-//		}
-//		
-//		// 북을 빌릴 수 있는 사람이 있는지 검사
-//		for (Human h : humanList) {
-//			if (h.getRentBookCode() == 0) {
-//				isHumanCheck = true;
-//				break;
-//			}
-//		}
-//		// 없으면 없다고하고 리턴
-//		// 대여를 할 수 있는 회원이 있는지 검사
-//		//없으면 없다고하고 리턴
-//		
-//		
-//		if (bookList.size() == 0 || !isBookCheck) {
-//			System.out.println("도서등록이 필요합니다.");
-//			return;
-//		} else if (humanList.size() == 0 || !isHumanCheck) {
-//			System.out.println("회원등록이 필요합니다.");
-//			return;
-//		}
-//		
-//		
-//		// 대여하는 사람을 선택하는 코드
-//		Human selectHuman = selectHuman();
-//		
-//		// 대여할 book을 선택하는 코드
-//		Book selectBook = selectBook();
-//		
-//		//책을 대여해준다.
-//		// 책에는 isRent상태를 false로 변경
-//		// 사람은 대여책 코드를 등록시킨다.
-//		selectHuman.setRentBookCode(selectBook.getCode());
-//		selectBook.setIsRent(false);
+
 		
 	}
 	
@@ -232,87 +190,7 @@ public class LibraryMenu {
 		//selectBook의 isRent를 true로 변경
 		//반납이 완료되었습니다. 출력
 	}
-	//human을 선택해서 반환해주는 메서드
-	public Human selectHuman() {
-		Human selectHuman = null;
-		while(selectHuman == null) {{
-			lc.printHumanList();
-			System.out.print("어떤 회원으로 대여하시겠습니까?(id입력) : ");
-			try {
-			int selectKey = sc.nextInt();
-			sc.nextLine();
-			
-			for (Human human : humanList) {
-				if (selectKey == human.getKey()) {
-					if (human.getRentBookCode() != 0) {
-						System.out.println("대여중인 책을 반납 후 이용 부탁드립니다.");
-					} else {
-						selectHuman = human;	
-					}
-				}
-			}
-		}catch(InputMismatchException x) {
-			System.out.println("제대로 된 사람 코드 입력하셈 숫자로");
-			sc.nextLine();
-	}
-		}
-		}
-		return selectHuman;
-	}
-	
-	// 대여할 book을 선택해서 반환해주는 메서드
-	public Book selectBook() {
-		Book selectBook = null;
-		
-		while(selectBook == null) {
-			lc.printBookList();
-			System.out.println("어떤 책을 대여하시겠습니까?(도서코드입력) : ");
-			
-			try {
-			int selectCode = sc.nextInt();		
-			sc.nextLine();
-		
-			for(Book book : bookList) {
-				if(book.getCode()==selectCode) {
-					if(book.getIsRent())
-						selectBook = book;
-					else
-						System.out.println("이미 대여중인 책입니다");
-					//빌리다가 종료하고 싶을 때 방법이 없다???????????????????
-//				}else {
-//					System.out.println("없는 도서코드를 입력하셨습니다");
-//					continue;
-				
-				}
-			}
-			}catch(InputMismatchException x) {
-					System.out.println("제대로 된 책 코드 입력하셈 숫자로");
-					sc.nextLine();
-			}
-//			for (int i = 0; i < bookList.size(); i++) {
-//				Book book = bookList.get(i);
-//				if (selectCode == book.getCode()) {
-//					if (!book.getIsRent()) {
-//						System.out.println("이미 대여중인 책입니다.");
-//					} else {
-//						selectBook = book;	
-//					}
-//				}
-//			}
-		
-	
-		}
-		return selectBook;
-	}
-	
-	
-	// bookList의 목록을 보여주는 메서드
 
-
-	// humanList의 목록을 보여주는 메서드
-
-
-	// 사용자에 입력에 따라 사람객체를 생성해서 반환한다.
 	public void createHuman() {
 		// 입력받기위한 객체
 		String name, residentNumber;
@@ -351,6 +229,22 @@ public class LibraryMenu {
 		
 
 		lc.createBook(title, author);
+	}
+	
+	public boolean checkHuman() {
+		if(lc.checkHuman().isEmpty()) {
+			return false;
+		}	
+			return true;
+	}
+	public boolean checkBook() {
+		boolean isBook = false;
+		for(Book bk : lc.checkBook()) {
+			if(bk.getIsRent() == 1){
+				isBook = true;
+			}
+		}
+		return isBook;
 	}
 	
 	//-------------------------------응답화면------------------------------------

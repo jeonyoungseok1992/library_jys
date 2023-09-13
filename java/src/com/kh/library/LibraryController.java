@@ -74,13 +74,21 @@ public class LibraryController {
 
 	}
 	
-	public ArrayList<Human> checkHuman(){
+	public void checkHuman(){
 		ArrayList<Human> hmList = new LibraryService().checkHuman();
-		return hmList;
+		if(hmList.isEmpty()) {
+			new LibraryMenu().displayNoData("빌릴 수 있는 회원이 없습니다");
+		}else {
+			new LibraryMenu().displayHumanList(hmList);
+		}
 	}
 	
-	public ArrayList<Book> checkBook(){
+	public void checkBook(){
 		ArrayList<Book> bkList = new LibraryService().checkBook();
-		return bkList;
+		if(bkList.isEmpty()) {
+			new LibraryMenu().displayNoData("빌릴 수 있는 책이 없습니다");
+		}else {
+			new LibraryMenu().displayBookList(bkList);
+		}
 	}
 }
