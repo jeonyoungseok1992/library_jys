@@ -66,11 +66,21 @@ public class LibraryService {
 	public int rentBook(int selectKey, int selectCode) {
 		Connection conn = LibraryTemplate.getConnection();
 		int result = new LibraryDao().rentBook(conn, selectKey, selectCode);
-		if(result > 0) {
+		if(result >= 2) {
 			LibraryTemplate.commit(conn);
 		}else
 			LibraryTemplate.rollback(conn);
 		return result;
+	}
+	
+	public int returnBook(int selectKey, int selectCode) {
+		Connection conn = LibraryTemplate.getConnection();
+		int result3 = new LibraryDao().returnBook(conn, selectKey, selectCode);
+		if(result3 >= 2) {
+			LibraryTemplate.commit(conn);
+		}else
+			LibraryTemplate.rollback(conn);
+		return result3;
 	}
 	
 	public ArrayList<Human> allHuman(){

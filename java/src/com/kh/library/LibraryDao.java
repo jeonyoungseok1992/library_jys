@@ -201,7 +201,9 @@ public class LibraryDao {
 	}
 	
 	public int rentBook(Connection conn, int selectKey, int selectCode) {
-		int result = 0;
+		int result1 = 0;
+		int result2 = 0;
+		int result3 = result1 + result2;
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt2 = null;
 		String sql = "UPDATE tb_human set hm_rentbookcode = ? where hm_key = ?";
@@ -210,11 +212,11 @@ public class LibraryDao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, selectCode);
 			pstmt.setInt(2, selectKey);
-			result = pstmt.executeUpdate();
+			result1 = pstmt.executeUpdate();
 			
 			pstmt2 = conn.prepareStatement(sql2);
 			pstmt2.setInt(1, selectCode);
-			pstmt2.executeUpdate();
+			result2 = pstmt2.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -222,7 +224,61 @@ public class LibraryDao {
 			LibraryTemplate.close(pstmt2);
 		}
 		
-		return result;
+		return result3;
+	
+	}
+	
+//	public int rentBook(Connection conn, int selectKey, int selectCode) {
+//		int result1 = 0;
+//
+//		PreparedStatement pstmt = null;
+//		String sql = "CREATE TRIGGER update_book_isrent_trigger"
+//				+ "AFTER UPDATE ON tb_book FOR EACH ROW"
+//				+ "BEGIN"
+//				+ "    IF NEW.bk_isrent = 0"
+//				+ "      then UPDATE tb_human SET hm_rentbookcode = CASE WHEN new. = 0 THEN 1 ELSE 0 END WHERE bk_code = NEW.hm_rentbookcode;\r\n"
+//				+ "    END IF;\r\n"
+//				+ "END";
+//
+//		try {
+//			pstmt = conn.prepareStatement(sql);
+//			pstmt.setInt(1, selectCode);
+//			pstmt.setInt(2, selectKey);
+//			result1 = pstmt.executeUpdate();
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			LibraryTemplate.close(pstmt);
+//		}
+//		
+//		return result1;	
+//	}
+	
+	public int returnBook(Connection conn, int selectKey, int selectCode) {
+		int result1 = 0;
+		int result2 = 0;
+		int result3 = result1 + result2;
+		PreparedStatement pstmt = null;
+		PreparedStatement pstmt2 = null;
+		String sql = "UPDATE tb_human set hm_rentbookcode = 0 where hm_key = ?";
+		String sql2 = "UPDATE tb_book set BK_ISRENT = 1 where bk_code = ?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, selectKey);
+			result1 = pstmt.executeUpdate();
+			
+			pstmt2 = conn.prepareStatement(sql2);
+			pstmt2.setInt(1, selectCode);
+			result2 = pstmt2.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			LibraryTemplate.close(pstmt);
+			LibraryTemplate.close(pstmt2);
+		}
+		
+		return result3;
 	
 	}
 	
@@ -231,7 +287,7 @@ public class LibraryDao {
 		Human hm;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String sql = "select * from tb_human where hm_rentbookcode = 0";
+		String sql = "select * from tb_human";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -265,7 +321,7 @@ public class LibraryDao {
 		Book bk;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String sql = "select * from tb_book where BK_ISRENT = 1";
+		String sql = "select * from tb_book";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);

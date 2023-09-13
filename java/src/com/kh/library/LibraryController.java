@@ -67,10 +67,19 @@ public class LibraryController {
 	
 	public void rentBook(int selectKey, int selectCode ) {
 		int result = new LibraryService().rentBook(selectKey, selectCode);
-		if (result > 0) {
+		if (result >= 2) {
 			new LibraryMenu().displaySuccess("성공적으로 도서 대여를 완료하였습니다");
 		}else
 			new LibraryMenu().displayFail("도서 대여에 실패하였습니다");
+
+	}
+	
+	public void returnBook(int selectKey, int selectCode ) {
+		int result = new LibraryService().returnBook(selectKey, selectCode);
+		if (result >= 2) {
+			new LibraryMenu().displaySuccess("성공적으로 도서 반납을 완료하였습니다");
+		}else
+			new LibraryMenu().displayFail("도서 반납에 실패하였습니다");
 
 	}
 	

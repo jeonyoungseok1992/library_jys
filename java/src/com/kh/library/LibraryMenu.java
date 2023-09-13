@@ -61,43 +61,55 @@ public class LibraryMenu {
 		}
 	}
 	
-	public void deleteHuman() {             //리턴을 객체로 해주면 중간에 끊근게 안됨...조회했는데 다 빌린상태라 삭제할게 없으면?
-		boolean isTrue = true;
-		while(isTrue) {
-			lc.printHumanList();
-			System.out.println("어떤 회원을 삭제하시겠습니까?(회원코드입력) : ");
-			
-			try {
-			int selectCode = sc.nextInt();		
-			sc.nextLine();
-			lc.deleteHuman(selectCode);
-			isTrue = false;
-
-			}catch(InputMismatchException x) {
-					System.out.println("제대로 된 회원 코드(숫자)를 입력하세요");
-					sc.nextLine();
-			}
+	public void deleteHuman() {   
+		
+		if(lc.allHuman().isEmpty()) {
+			System.out.println("등록 된 회원이 존재하지 않습니다");
+			return;
 		}
+
+		lc.printHumanList();
+		System.out.println("어떤 회원을 삭제하시겠습니까?(회원코드입력) : ");
+		while(true) {
+		try {
+		int selectCode = sc.nextInt();		
+		sc.nextLine();
+		lc.deleteHuman(selectCode);
+		break;
+		
+
+		}catch(InputMismatchException x) {
+				System.out.println("제대로 된 회원 코드(숫자)를 입력하세요");
+				sc.nextLine();
+		}
+		}
+		
 	}
 	
 	public void deleteBook() {
-	
-		boolean isTrue = true;
-		while(isTrue) {
-			lc.printBookList();
-			System.out.println("어떤 책을 삭제하시겠습니까?(도서코드입력) : ");
-			
-			try {
-			int selectCode = sc.nextInt();		
-			sc.nextLine();
-			lc.deleteBook(selectCode);
-			isTrue = false;
-
-			}catch(InputMismatchException x) {
-					System.out.println("제대로 된 책 코드(숫자)를 입력하세요");
-					sc.nextLine();
-			}
+		
+		if(lc.allBook().isEmpty()) {
+			System.out.println("등록 된 도서가 존재하지 않습니다");
+			return;
 		}
+	
+		lc.printBookList();
+		
+		while(true) {
+		try {
+		System.out.println("어떤 책을 삭제하시겠습니까?(도서코드입력) : ");
+		int selectCode = sc.nextInt();		
+		sc.nextLine();
+		lc.deleteBook(selectCode);
+		break;
+	
+
+		}catch(InputMismatchException x) {
+				System.out.println("제대로 된 책 코드(숫자)를 입력하세요");
+				sc.nextLine();
+		}
+			}
+		
 			
 	}
 
@@ -130,9 +142,9 @@ public class LibraryMenu {
 		for(Human hm : lc.allHuman()) {
 			System.out.println(hm);
 		}
-				
-						
-		System.out.print("어떤 회원으로 대여하시겠습니까?(id입력) : ");		
+		while(true) {		
+		try {				
+		System.out.print("어떤 회원으로 대여하시겠습니까?(회원key입력) : ");		
 		int selectKey = sc.nextInt();
 		sc.nextLine();
 		
@@ -146,27 +158,77 @@ public class LibraryMenu {
 		sc.nextLine();
 		
 		lc.rentBook(selectKey, selectCode);	
-		
+		break;
+		}
+		catch(Exception e){
+			System.out.println("제대로 된 코드(숫자)를 입력하세요");
+		}
+		}
 
 		
 	}
 	
 
 	public void returnBook() {
+		boolean isHuman = false;
+		for(Human hm : lc.allHuman()) {
+			if(hm.getRentBookCode() != 0) {
+				isHuman = true;
+				break;
+			}
+		}
+		if(!isHuman) {
+			System.out.println("책을 대여 중인 회원이 없습니다");
+			return;
+		} 
+		
+		boolean isBook = false;
+		for(Book bk : lc.allBook()) {
+			if(bk.getIsRent() != 1) {
+				isBook = true;
+				break;
+			}
+		}
+		if(!isBook) {
+			System.out.println("대여 중인 도서가 없습니다");
+			return;
+		}
+		
+		for(Human hm : lc.allHuman()) {
+			System.out.println(hm);
+		}
+		while(true) {
+		try {
+		System.out.print("어떤 회원으로 반납하시겠습니까?(회원key입력) : ");		
+		int selectKey = sc.nextInt();
+		sc.nextLine();
+		
+		for(Book bk : lc.allBook()) {
+			System.out.println(bk);
+		}
 		
 		
-
+		System.out.println("어떤 책을 반납하시겠습니까?(도서코드입력) : ");
+		int selectCode = sc.nextInt();		
+		sc.nextLine();
+		
+		lc.returnBook(selectKey, selectCode);	
+		break;
+		}
+		catch(Exception e) {
+			System.out.println("제대로 된 회원 코드(숫자)를 입력하세요");
+		}
+		}
 
 
 	}
 
 	public void createHuman() {
-		// 입력받기위한 객체
 		String name, residentNumber;
 		int age;
 		char gender;
-		// 이름, 나이, 주민등록번호, 성별을 입력받아 사람객체 한개를 생성한다.
-
+		while(true) {
+		try {
 		System.out.print("이름을 입력하세요 : ");
 		name = sc.nextLine();
 		System.out.print("주민등록번호 앞 6자리를 입력하세요. : ");
@@ -176,28 +238,42 @@ public class LibraryMenu {
 		sc.nextLine();
 		System.out.print("성별을 입력해주세요.(남 : M, 여자는: F) : ");
 		gender = sc.nextLine().toUpperCase().charAt(0);
-
-
+		if(gender !='M' && gender!= 'F' ) {
+			System.out.println("남 : M, 여자는: F에 맞게 입력해주세요");
+			return;
+		}
+		
 		lc.createHuman(name, residentNumber, age, gender);
+		break;
+		} 
+		catch(Exception e){
+			System.out.println("타입에 맞는 입력값을 입력해주세요");
+			sc.nextLine();
+		}
+		}
+		
+
+		
 	}
 
-	// 사용자에 입력에 따라 책객체를 생성해서 반환한다.
+
 	public void createBook() {
-		// 입력받기위한 객체
+
 
 		String title, author;
 		String code;
-		// 제목, 작가, 책코드를 입력받는다.
 
+		while(true) {
 		System.out.print("책 제목을 입력하세요 : ");
 		title = sc.nextLine();
 		System.out.print("작가를 입력하세요 : ");
 		author = sc.nextLine();
-//		System.out.print("책 코유코드를 입력하세요. : ");
-//		code = sc.nextLine();
+
 		
 
 		lc.createBook(title, author);
+		break;
+		}
 	}
 	
 //	public ArrayList<Human> allHuman() {
