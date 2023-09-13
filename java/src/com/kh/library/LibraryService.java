@@ -73,16 +73,16 @@ public class LibraryService {
 		return result;
 	}
 	
-	public ArrayList<Human> checkHuman(){
+	public ArrayList<Human> allHuman(){
 		Connection conn = LibraryTemplate.getConnection();
-		ArrayList<Human> hmList = new LibraryDao().checkHuman(conn);
+		ArrayList<Human> hmList = new LibraryDao().allHuman(conn);
 		LibraryTemplate.close(conn);
 		return hmList;
 	}
 
-	public ArrayList<Book> checkBook(){
+	public ArrayList<Book> allBook(){
 		Connection conn = LibraryTemplate.getConnection();
-		ArrayList<Book> bkList = new LibraryDao().checkBook(conn);
+		ArrayList<Book> bkList = new LibraryDao().allBook(conn);
 		LibraryTemplate.close(conn);
 		return bkList;
 	}

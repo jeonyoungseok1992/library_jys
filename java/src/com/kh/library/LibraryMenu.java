@@ -98,97 +98,66 @@ public class LibraryMenu {
 					sc.nextLine();
 			}
 		}
-		
-		
-		
-		
-		
+			
 	}
 
-	// 도서 대여를 위한 메서드
 	public void rentBook() {
+		boolean isHuman = false;
+		for(Human hm : lc.allHuman()) {
+			if(hm.getRentBookCode()==0) {
+				isHuman = true;
+				break;
+			}
+		}
 		
-		if(lc.checkHuman().isEmpty()) {
+		if(!isHuman) {
 			System.out.println("대여가능 한 회원이 없습니다");
 			return;
 		}
-		Boolean isBook = false;
-		for(Book bk : lc.checkBook()) {
+
+		boolean isBook = false;
+		for(Book bk : lc.allBook()) {
 			if(bk.getIsRent() == 1) {
 				isBook = true;
 				break;
-			}	
+			}
 		}
-		
-		if(lc.checkBook().isEmpty() || !isBook) {
-			System.out.println("다 빌렸거나 책이 없습니다");
+		if(!isBook) {
+			System.out.println("대여가능 한 책이 없습니다");
 			return;
 		}
-			
+
+		for(Human hm : lc.allHuman()) {
+			System.out.println(hm);
+		}
+				
 						
-		lc.printHumanList();
 		System.out.print("어떤 회원으로 대여하시겠습니까?(id입력) : ");		
 		int selectKey = sc.nextInt();
 		sc.nextLine();
 		
+		for(Book bk : lc.allBook()) {
+			System.out.println(bk);
+		}
 		
-		lc.printBookList();
+		
 		System.out.println("어떤 책을 대여하시겠습니까?(도서코드입력) : ");
 		int selectCode = sc.nextInt();		
 		sc.nextLine();
 		
-		lc.rentBook(selectKey, selectCode );	
+		lc.rentBook(selectKey, selectCode);	
 		
 
 		
 	}
 	
-	//도서를 반납하기위한 메서드
+
 	public void returnBook() {
-		//************************************************
-		//책을 빌린사람들을 추린다.
-		// humanList => 전체검사하면서 책을 대여한 사람만 tmpHumanList 추가 
-		ArrayList<Human> tmpHumanList = new ArrayList<>();
-		for (Human man : humanList) {
-			if (man.getRentBookCode() != 0) {
-				tmpHumanList.add(man);
-			}
-		}
 		
-		if (tmpHumanList.size() == 0) {
-			System.out.println("반납할 책이 없습니다.");
-			return;
-		}
-		//tmpHumanList담긴 사람들을 보여준다.
-		//lc.printHumanList(tmpHumanList);
 		
-		System.out.println("어떤 회원이 반납함?(id입력) : ");
-		
-		int hk = sc.nextInt();
-		sc.nextLine();
-		for(Human man : tmpHumanList) {
-			if(man.getKey() == hk) {
-				for(Book bk : bookList) {
-					if(man.getRentBookCode() == bk.getCode()) {
-						bk.setIsRent(true);
-						System.out.println("반납 완료");
-					}
-				}
-				man.setRentBookCode(0);
-				
-			}
-				
-		
-		}
-	
-		//리스트에 있는 사람중 어떤 사람의 책을 반납할지 id를 입력받는다.
-		//해당 사람을 selectHuman이라는 변수를 만들어 담아준다.
-		//해당 사람이 빌린 책을 rentBookCode를 이용해서 bookList에서 찾아준다.
-		//해당 책을 selectBook이라는 변수를 만들어 담아준다.
-		
-		//selectHuman의 rentBookCode를 0으로 변경
-		//selectBook의 isRent를 true로 변경
-		//반납이 완료되었습니다. 출력
+
+
+
 	}
 
 	public void createHuman() {
@@ -231,21 +200,22 @@ public class LibraryMenu {
 		lc.createBook(title, author);
 	}
 	
-	public boolean checkHuman() {
-		if(lc.checkHuman().isEmpty()) {
-			return false;
-		}	
-			return true;
-	}
-	public boolean checkBook() {
-		boolean isBook = false;
-		for(Book bk : lc.checkBook()) {
-			if(bk.getIsRent() == 1){
-				isBook = true;
-			}
-		}
-		return isBook;
-	}
+//	public ArrayList<Human> allHuman() {
+//
+//		return lc.allHuman();
+////		if(lc.checkHuman().isEmpty()) {
+////			return false;
+////		}else	
+////			return true;
+//	}
+//	public ArrayList<Book> allBook() {
+//
+//		return lc.allBook();
+//		if(lc.checkBook().isEmpty()) {
+//			return false;
+//		}else	
+//			return true;
+//	}
 	
 	//-------------------------------응답화면------------------------------------
 	

@@ -226,9 +226,9 @@ public class LibraryDao {
 	
 	}
 	
-	public ArrayList<Human> checkHuman(Connection conn){
-		ArrayList HmList = new ArrayList<>();
-		Human hm = new Human();
+	public ArrayList<Human> allHuman(Connection conn){
+		ArrayList<Human> HmList = new ArrayList<>();
+		Human hm;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		String sql = "select * from tb_human where hm_rentbookcode = 0";
@@ -238,6 +238,7 @@ public class LibraryDao {
 			rset = pstmt.executeQuery();
 			
 			while(rset.next()) {
+				hm = new Human();
 				hm.setKey(rset.getInt("hm_key"));
 				hm.setName(rset.getString("hm_name"));
 				hm.setResidentNumber(rset.getString("hm_rnumber"));
@@ -245,7 +246,7 @@ public class LibraryDao {
 				String str = rset.getString("hm_age");
 				char gender = str.charAt(0);
 				hm.setGender(gender);
-				hm.setRentBookCode(rset.getInt("hm_rendbookcode"));
+				hm.setRentBookCode(rset.getInt("hm_rentbookcode"));
 				
 				HmList.add(hm);
 			}
@@ -259,18 +260,19 @@ public class LibraryDao {
 	}
 	
 
-	public ArrayList<Book> checkBook(Connection conn){
+	public ArrayList<Book> allBook(Connection conn){
 		ArrayList<Book> bkList = new ArrayList<>();
-		Book bk = new Book();
+		Book bk;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String sql = "select * from tb_book";
+		String sql = "select * from tb_book where BK_ISRENT = 1";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rset = pstmt.executeQuery();
 			
 			while(rset.next()) {
+				bk = new Book();
 				bk.setTitle(rset.getString("bk_title"));
 				bk.setAuthor(rset.getString("bk_author"));
 				bk.setCode(rset.getInt("bk_code"));
