@@ -203,7 +203,7 @@ public class LibraryDao {
 	public int rentBook(Connection conn, int selectKey, int selectCode) {
 		int result1 = 0;
 		int result2 = 0;
-		int result3 = result1 + result2;
+		int result3 = 0;
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt2 = null;
 		String sql = "UPDATE tb_human set hm_rentbookcode = ? where hm_key = ?";
@@ -217,6 +217,8 @@ public class LibraryDao {
 			pstmt2 = conn.prepareStatement(sql2);
 			pstmt2.setInt(1, selectCode);
 			result2 = pstmt2.executeUpdate();
+			
+			result3 = result1 + result2;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -258,7 +260,7 @@ public class LibraryDao {
 	public int returnBook(Connection conn, int selectKey, int selectCode) {
 		int result1 = 0;
 		int result2 = 0;
-		int result3 = result1 + result2;
+		int result3 = 0;
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt2 = null;
 		String sql = "UPDATE tb_human set hm_rentbookcode = 0 where hm_key = ?";
@@ -271,6 +273,7 @@ public class LibraryDao {
 			pstmt2 = conn.prepareStatement(sql2);
 			pstmt2.setInt(1, selectCode);
 			result2 = pstmt2.executeUpdate();
+			result3 = result1 + result2;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

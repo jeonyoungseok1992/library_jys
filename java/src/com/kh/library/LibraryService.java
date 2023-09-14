@@ -43,7 +43,7 @@ public class LibraryService {
 	public int deleteBook(int selectCode) {
 		Connection conn = LibraryTemplate.getConnection();
 		int result = new LibraryDao().deleteBook(conn, selectCode);
-		
+		LibraryTemplate.close(conn);
 		if(result > 0) {
 			LibraryTemplate.commit(conn);
 		}else
@@ -55,7 +55,7 @@ public class LibraryService {
 	public int deleteHuman(int selectCode) {
 		Connection conn = LibraryTemplate.getConnection();
 		int result = new LibraryDao().deleteHuman(conn, selectCode);
-		
+		LibraryTemplate.close(conn);
 		if(result > 0) {
 			LibraryTemplate.commit(conn);
 		}else
@@ -66,6 +66,7 @@ public class LibraryService {
 	public int rentBook(int selectKey, int selectCode) {
 		Connection conn = LibraryTemplate.getConnection();
 		int result = new LibraryDao().rentBook(conn, selectKey, selectCode);
+		LibraryTemplate.close(conn);
 		if(result >= 2) {
 			LibraryTemplate.commit(conn);
 		}else
@@ -76,6 +77,7 @@ public class LibraryService {
 	public int returnBook(int selectKey, int selectCode) {
 		Connection conn = LibraryTemplate.getConnection();
 		int result3 = new LibraryDao().returnBook(conn, selectKey, selectCode);
+		LibraryTemplate.close(conn);
 		if(result3 >= 2) {
 			LibraryTemplate.commit(conn);
 		}else
@@ -86,6 +88,7 @@ public class LibraryService {
 	public ArrayList<Human> allHuman(){
 		Connection conn = LibraryTemplate.getConnection();
 		ArrayList<Human> hmList = new LibraryDao().allHuman(conn);
+		
 		LibraryTemplate.close(conn);
 		return hmList;
 	}
