@@ -6,13 +6,21 @@ public class Book {
 	private String author;
 	private int code;
 	private int isRent ;
+	private int stock ;
 	
 	
 	
 	
-	public Book(String title, String author) {
+	public Book(String title, String author ) {
 		this.title = title;
 		this.author = author;
+
+	}
+	
+	public Book(String title, String author, int stock ) {
+		this.title = title;
+		this.author = author;
+		this.stock = stock;
 
 	}
 	
@@ -30,6 +38,14 @@ public class Book {
 	
 
 	
+	public int getStock() {
+		return stock;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
+
 	public String getTitle() {
 		return title;
 	}

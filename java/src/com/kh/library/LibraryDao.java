@@ -122,12 +122,13 @@ public class LibraryDao {
 
 		int result = 0;
 		
-		String sql = "insert into tb_book values(SEQ_BOOK.NEXTVAL,?,?,default)";
+		String sql = "insert into tb_book values(SEQ_BOOK.NEXTVAL,?,?,default,?)";
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement(sql);	
 			pstmt.setString(1,bk.getTitle());
 			pstmt.setString(2,bk.getAuthor());
+			pstmt.setInt(3,bk.getStock());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 
@@ -203,7 +204,7 @@ public class LibraryDao {
 	public int rentBook(Connection conn, int selectKey, int selectCode) {
 		int result1 = 0;
 		int result2 = 0;
-		int result3 = 0;
+		int result3 = result1 + result2;
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt2 = null;
 		String sql = "UPDATE tb_human set hm_rentbookcode = ? where hm_key = ?";
@@ -217,8 +218,8 @@ public class LibraryDao {
 			pstmt2 = conn.prepareStatement(sql2);
 			pstmt2.setInt(1, selectCode);
 			result2 = pstmt2.executeUpdate();
-			
 			result3 = result1 + result2;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

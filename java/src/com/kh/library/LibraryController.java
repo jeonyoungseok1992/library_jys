@@ -28,8 +28,8 @@ public class LibraryController {
 
 	}
 	
-	public void createBook(String title, String author) {
-		Book bk = new Book(title, author);
+	public void createBook(String title, String author, int stock) {
+		Book bk = new Book(title, author, stock);
 		int result = new LibraryService().createBook(bk);
 		
 		if (result > 0) {

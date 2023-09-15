@@ -20,7 +20,7 @@ public class LibraryMenu {
 			System.out.println("6. 회원삭제");
 			System.out.println("7. 도서조회");
 			System.out.println("8. 회원조회");
-			System.out.println("9. 프로그램 종료");
+			System.out.println("0. 프로그램 종료");
 			System.out.println("============================");
 			System.out.println("원하시는 서비스 번호를 입력하세요 : ");
 
@@ -52,7 +52,7 @@ public class LibraryMenu {
 				case 8:
 					lc.printHumanList();				
 					break;
-				case 9:
+				case 0:
 					System.out.println("프로그램을 종료합니다.");
 					break;
 				default:
@@ -262,16 +262,19 @@ public class LibraryMenu {
 
 		String title, author;
 		String code;
+		int stock;
 
 		while(true) {
 		System.out.print("책 제목을 입력하세요 : ");
 		title = sc.nextLine();
 		System.out.print("작가를 입력하세요 : ");
 		author = sc.nextLine();
+		System.out.println("책 개수를 입력하세요");
+		stock = sc.nextInt();
 
 		
 
-		lc.createBook(title, author);
+		lc.createBook(title, author, stock);
 		break;
 		}
 	}
