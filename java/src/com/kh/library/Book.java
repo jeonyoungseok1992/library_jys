@@ -2,18 +2,22 @@ package com.kh.library;
 
 //Book객체를 만들기위한 클레스
 public class Book {
+	private int code;
 	private String title;
 	private String author;
-	private int code;
-	private int isRent ;
 	private int stock ;
+	private int isRent ;
+
 	
 	
 	
 	
-	public Book(String title, String author ) {
+	public Book(int code, String title, String author, int stock, int isRent ) {
+		this.code = code;
 		this.title = title;
 		this.author = author;
+		this.stock = stock;
+		this.isRent = isRent;
 
 	}
 	
@@ -96,6 +100,6 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return this.code + "\t" + this.title + "\t" + this.author + "\t" + (this.isRent == 1 ? "대여가능": "대여불가");
+		return this.code + "\t" + this.title + "\t" + this.author + "  \t  " + this.stock + "       \t" + (this.isRent == 0 ? "대여가능": "대여불가");
 	}
 }

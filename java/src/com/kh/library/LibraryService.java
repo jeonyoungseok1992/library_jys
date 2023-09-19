@@ -16,6 +16,20 @@ public class LibraryService {
 		
 	}
 	
+	public ArrayList<Book> printBookList(){
+		ArrayList<Book> bkList = new LibraryDao().printBookList();
+		
+		return bkList;
+		
+	}
+	
+	public ArrayList<RentLog> printRentLog(){
+		ArrayList<RentLog> rlList = new LibraryDao().printRentLog();
+		
+		return rlList;
+		
+	}
+	
 	public int createBook(Book bk) {
 		Connection conn = LibraryTemplate.getConnection();
 		int result = new LibraryDao().createBook(conn, bk);
@@ -67,7 +81,7 @@ public class LibraryService {
 		Connection conn = LibraryTemplate.getConnection();
 		int result = new LibraryDao().rentBook(conn, selectKey, selectCode);
 		LibraryTemplate.close(conn);
-		if(result >= 2) {
+		if(result > 0) {
 			LibraryTemplate.commit(conn);
 		}else
 			LibraryTemplate.rollback(conn);
@@ -78,7 +92,7 @@ public class LibraryService {
 		Connection conn = LibraryTemplate.getConnection();
 		int result3 = new LibraryDao().returnBook(conn, selectKey, selectCode);
 		LibraryTemplate.close(conn);
-		if(result3 >= 2) {
+		if(result3 > 0) {
 			LibraryTemplate.commit(conn);
 		}else
 			LibraryTemplate.rollback(conn);
@@ -98,5 +112,12 @@ public class LibraryService {
 		ArrayList<Book> bkList = new LibraryDao().allBook(conn);
 		LibraryTemplate.close(conn);
 		return bkList;
+	}
+	
+	public ArrayList<RentLog> allRentLog(){
+		Connection conn = LibraryTemplate.getConnection();
+		ArrayList<RentLog> rlList = new LibraryDao().allRentLog(conn);
+		LibraryTemplate.close(conn);
+		return rlList;
 	}
 }

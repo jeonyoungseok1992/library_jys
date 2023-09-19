@@ -18,12 +18,24 @@ public class LibraryController {
 	
 	public void printBookList() {
 		
-		ArrayList<Book> BkList = new LibraryDao().printBookList();
+		ArrayList<Book> BkList = new LibraryService().printBookList();
 		
 		if(BkList.isEmpty()) {
 			new LibraryMenu().displayNoData("전체 도서 조회 결과가 없습니다");
 		}else {
 			new LibraryMenu().displayBookList(BkList);
+		}
+
+	}
+	
+	public void printRentLog() {
+		
+		ArrayList<RentLog> rlList = new LibraryService().printRentLog();
+		
+		if(rlList.isEmpty()) {
+			new LibraryMenu().displayNoData("전체 대여 기록이 없습니다");
+		}else {
+			new LibraryMenu().displayRentLog(rlList);
 		}
 
 	}
@@ -39,8 +51,8 @@ public class LibraryController {
 		
 	}
 	
-	public void createHuman(String name, String residentNumber, int age, char gender) {
-		Human human = new Human(name, residentNumber, age, gender);
+	public void createHuman(String name, String residentNumber, int age, char gender, String admin) {
+		Human human = new Human(name, residentNumber, age, gender, admin);
 		int result = new LibraryService().createHuman(human);
 		if (result > 0) {
 			new LibraryMenu().displaySuccess("성공적으로 회원 추가를 완료하였습니다");
@@ -67,7 +79,7 @@ public class LibraryController {
 	
 	public void rentBook(int selectKey, int selectCode ) {
 		int result = new LibraryService().rentBook(selectKey, selectCode);
-		if (result >= 2) {
+		if (result > 0) {
 			new LibraryMenu().displaySuccess("성공적으로 도서 대여를 완료하였습니다");
 		}else
 			new LibraryMenu().displayFail("도서 대여에 실패하였습니다");
@@ -76,7 +88,7 @@ public class LibraryController {
 	
 	public void returnBook(int selectKey, int selectCode ) {
 		int result = new LibraryService().returnBook(selectKey, selectCode);
-		if (result >= 2) {
+		if (result > 0) {
 			new LibraryMenu().displaySuccess("성공적으로 도서 반납을 완료하였습니다");
 		}else
 			new LibraryMenu().displayFail("도서 반납에 실패하였습니다");
@@ -91,5 +103,10 @@ public class LibraryController {
 	public ArrayList<Book> allBook(){
 		ArrayList<Book> bkList = new LibraryService().allBook();
 		return bkList;
+	}
+	
+	public ArrayList<RentLog> allRentLog(){
+		ArrayList<RentLog> rlList = new LibraryService().allRentLog();
+		return rlList;
 	}
 }

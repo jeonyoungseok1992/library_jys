@@ -9,8 +9,8 @@ public class LibraryMenu {
 
 
 	public void mainMenu() {
-		int number = 0;
-		while (number != 9) {
+		int number = 99;
+		while (number != 0) {
 			System.out.println("============================");
 			System.out.println("1. 도서등록");
 			System.out.println("2. 도서대여");
@@ -20,6 +20,7 @@ public class LibraryMenu {
 			System.out.println("6. 회원삭제");
 			System.out.println("7. 도서조회");
 			System.out.println("8. 회원조회");
+			System.out.println("9. 대여기록조회");
 			System.out.println("0. 프로그램 종료");
 			System.out.println("============================");
 			System.out.println("원하시는 서비스 번호를 입력하세요 : ");
@@ -51,6 +52,9 @@ public class LibraryMenu {
 					break;
 				case 8:
 					lc.printHumanList();				
+					break;
+				case 9:
+					lc.printRentLog();				
 					break;
 				case 0:
 					System.out.println("프로그램을 종료합니다.");
@@ -114,13 +118,13 @@ public class LibraryMenu {
 	}
 
 	public void rentBook() {
-		boolean isHuman = false;
-		for(Human hm : lc.allHuman()) {
-			if(hm.getRentBookCode()==0) {
-				isHuman = true;
-				break;
+		
+		boolean isHuman = true;
+			if(lc.allHuman().isEmpty()){
+				isHuman = false;			
 			}
-		}
+		
+	
 		
 		if(!isHuman) {
 			System.out.println("대여가능 한 회원이 없습니다");
@@ -129,7 +133,7 @@ public class LibraryMenu {
 
 		boolean isBook = false;
 		for(Book bk : lc.allBook()) {
-			if(bk.getIsRent() == 1) {
+			if(bk.getIsRent() == 0) {
 				isBook = true;
 				break;
 			}
@@ -144,7 +148,7 @@ public class LibraryMenu {
 		}
 		while(true) {		
 		try {				
-		System.out.print("어떤 회원으로 대여하시겠습니까?(회원key입력) : ");		
+		System.out.print("어떤 회원으로 대여하시겠습니까?  (회원key입력) : ");		
 		int selectKey = sc.nextInt();
 		sc.nextLine();
 		
@@ -153,7 +157,7 @@ public class LibraryMenu {
 		}
 		
 		
-		System.out.println("어떤 책을 대여하시겠습니까?(도서코드입력) : ");
+		System.out.println("어떤 책을 대여하시겠습니까?  (도서코드입력) : ");
 		int selectCode = sc.nextInt();		
 		sc.nextLine();
 		
@@ -170,21 +174,21 @@ public class LibraryMenu {
 	
 
 	public void returnBook() {
-		boolean isHuman = false;
-		for(Human hm : lc.allHuman()) {
-			if(hm.getRentBookCode() != 0) {
-				isHuman = true;
+		boolean isRentLog = false;
+		for(RentLog rl : lc.allRentLog()) {
+			if(rl.getRentInOut().equals("대여")) {
+				isRentLog = true;
 				break;
 			}
 		}
-		if(!isHuman) {
+		if(!isRentLog) {
 			System.out.println("책을 대여 중인 회원이 없습니다");
 			return;
 		} 
 		
 		boolean isBook = false;
 		for(Book bk : lc.allBook()) {
-			if(bk.getIsRent() != 1) {
+			if(bk.getIsRent() != 0) {
 				isBook = true;
 				break;
 			}
@@ -224,7 +228,7 @@ public class LibraryMenu {
 	}
 
 	public void createHuman() {
-		String name, residentNumber;
+		String name, residentNumber, admin;
 		int age;
 		char gender;
 		while(true) {
@@ -242,8 +246,10 @@ public class LibraryMenu {
 			System.out.println("남 : M, 여자는: F에 맞게 입력해주세요");
 			return;
 		}
+		System.out.println("권한 등급을 입력해주세요");
+		admin = sc.nextLine();
 		
-		lc.createHuman(name, residentNumber, age, gender);
+		lc.createHuman(name, residentNumber, age, gender, admin);
 		break;
 		} 
 		catch(Exception e){
@@ -305,7 +311,7 @@ public class LibraryMenu {
 	public void displayBookList(ArrayList<Book> BkList) {
 		System.out.println("--------------------------------");
 		
-		System.out.println("번호 \t 제목 \t 작가 \t 대여여부");
+		System.out.println("번호 \t 제목 \t 작가 \t 대여가능 권 수 \t 대여여부");
 		for(Book bk : BkList) {
 			System.out.println(bk);	
 		}
@@ -315,9 +321,19 @@ public class LibraryMenu {
 	public void displayHumanList(ArrayList<Human> HmList) {
 		System.out.println("--------------------------------");
 		
-		System.out.println("번호 \t 이름 \t 주민번호\t나이\t성별\t 대여여부");
+		System.out.println("번호 \t 이름 \t 주민번호\t나이\t성별");
 		for(Human hm : HmList) {
 			System.out.println(hm);	
+		}
+		System.out.println("--------------------------------");
+	}
+	
+	public void displayRentLog(ArrayList<RentLog> rlList) {
+		System.out.println("--------------------------------");
+		
+		System.out.println("번호 \t 사람key \t 책code\t대여여부\t대여날짜");
+		for(RentLog rl : rlList) {
+			System.out.println(rl);	
 		}
 		System.out.println("--------------------------------");
 	}

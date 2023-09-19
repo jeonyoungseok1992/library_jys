@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class LibraryDao {
 	
@@ -33,9 +32,10 @@ public class LibraryDao {
 			
 					while(rset.next()) {
 						Book bk = new Book();
-						bk.setTitle(rset.getString("BK_TITLE"));
-						bk.setAuthor(rset.getString("BK_AUTHOR"));
-						bk.setCode(rset.getInt("BK_CODE"));
+						bk.setTitle(rset.getString("bk_title"));
+						bk.setAuthor(rset.getString("bk_author"));
+						bk.setCode(rset.getInt("bk_code"));
+						bk.setStock(rset.getInt("bk_stock"));
 						bk.setIsRent(rset.getInt("bk_isrent"));
 						
 						BkList.add(bk);
@@ -90,10 +90,8 @@ public class LibraryDao {
 					hm.setName(rset.getString("hm_name"));
 					hm.setResidentNumber(rset.getString("hm_rnumber"));
 					hm.setAge(rset.getInt("hm_age"));
-					String str = rset.getString("hm_gender");
-					char gender = str.charAt(0);
-					hm.setGender(gender);
-					hm.setRentBookCode(rset.getInt("HM_RENTBOOKCODE"));
+					hm.setGender(rset.getString("hm_gender").charAt(0));
+					
 
 					
 					HmList.add(hm);
@@ -118,11 +116,73 @@ public class LibraryDao {
 	}
 	
 	
+	public ArrayList<RentLog> printRentLog(){
+		
+		ArrayList<RentLog> rlList = new ArrayList<>();
+		
+		ResultSet rset = null;
+		Connection conn = null;
+		Statement stmt = null;
+		
+		String sql = "SELECT * FROM TB_RentLog";
+		
+
+			
+			try {
+			
+					Class.forName("oracle.jdbc.driver.OracleDriver");
+					conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","BOOK","BOOK");
+					stmt = conn.createStatement();
+					rset = stmt.executeQuery(sql);
+					
+			
+					while(rset.next()) {
+						RentLog rl = new RentLog();
+						rl.setLogNo(rset.getInt("LOG_NO"));
+						rl.setHm_rentKey(rset.getInt("HM_RENTKEY"));
+						rl.setBk_rentCode(rset.getInt("BK_RENTCODE"));
+						rl.setRentInOut(rset.getString("RENT_INOUT"));
+						String strdate = rset.getDate("enrolldate").toGMTString();
+						rl.setEnrollDate(strdate);
+						
+						rlList.add(rl);
+					}
+					
+				
+			}		
+			 catch (ClassNotFoundException e) {
+					e.printStackTrace();
+			}
+				
+			catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				try {
+					rset.close();
+					stmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					
+					e.printStackTrace();
+				}
+				
+			}
+			
+			
+			return rlList;
+		
+				
+	}
+	
+	
+
+	
+	
 	public int createBook(Connection conn, Book bk) {
 
 		int result = 0;
 		
-		String sql = "insert into tb_book values(SEQ_BOOK.NEXTVAL,?,?,default,?)";
+		String sql = "insert into tb_book values(SEQ_BOOK.NEXTVAL,?,?,?,default)";
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement(sql);	
@@ -144,7 +204,7 @@ public class LibraryDao {
 	public int createHuman(Connection conn, Human human) {
 		int result = 0;
 		PreparedStatement pstmt = null;
-		String sql = "insert into tb_human values(seq_human.nextval,?,?,?,?,DEFAULT)";
+		String sql = "insert into tb_human values(seq_human.nextval,?,?,?,?,?)";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -152,6 +212,7 @@ public class LibraryDao {
 			pstmt.setString(2, human.getResidentNumber());
 			pstmt.setInt(3, human.getAge());
 			pstmt.setString(4, String.valueOf(human.getGender()));
+			pstmt.setString(5, human.getAdmin());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -201,88 +262,84 @@ public class LibraryDao {
 		
 	}
 	
-	public int rentBook(Connection conn, int selectKey, int selectCode) {
-		int result1 = 0;
-		int result2 = 0;
-		int result3 = result1 + result2;
-		PreparedStatement pstmt = null;
-		PreparedStatement pstmt2 = null;
-		String sql = "UPDATE tb_human set hm_rentbookcode = ? where hm_key = ?";
-		String sql2 = "UPDATE tb_book set BK_ISRENT = 0 where bk_code = ?";
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, selectCode);
-			pstmt.setInt(2, selectKey);
-			result1 = pstmt.executeUpdate();
-			
-			pstmt2 = conn.prepareStatement(sql2);
-			pstmt2.setInt(1, selectCode);
-			result2 = pstmt2.executeUpdate();
-			result3 = result1 + result2;
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			LibraryTemplate.close(pstmt);
-			LibraryTemplate.close(pstmt2);
-		}
-		
-		return result3;
-	
-	}
-	
 //	public int rentBook(Connection conn, int selectKey, int selectCode) {
 //		int result1 = 0;
-//
+//		int result2 = 0;
+//		int result3 = result1 + result2;
 //		PreparedStatement pstmt = null;
-//		String sql = "CREATE TRIGGER update_book_isrent_trigger"
-//				+ "AFTER UPDATE ON tb_book FOR EACH ROW"
-//				+ "BEGIN"
-//				+ "    IF NEW.bk_isrent = 0"
-//				+ "      then UPDATE tb_human SET hm_rentbookcode = CASE WHEN new. = 0 THEN 1 ELSE 0 END WHERE bk_code = NEW.hm_rentbookcode;\r\n"
-//				+ "    END IF;\r\n"
-//				+ "END";
-//
+//		PreparedStatement pstmt2 = null;
+//		String sql = "UPDATE tb_human set hm_rentbookcode = ? where hm_key = ?";
+//		String sql2 = "UPDATE tb_book set BK_ISRENT = 0 where bk_code = ?";
 //		try {
 //			pstmt = conn.prepareStatement(sql);
 //			pstmt.setInt(1, selectCode);
 //			pstmt.setInt(2, selectKey);
 //			result1 = pstmt.executeUpdate();
-//
+//			
+//			pstmt2 = conn.prepareStatement(sql2);
+//			pstmt2.setInt(1, selectCode);
+//			result2 = pstmt2.executeUpdate();
+//			result3 = result1 + result2;
+//			
 //		} catch (SQLException e) {
 //			e.printStackTrace();
 //		} finally {
 //			LibraryTemplate.close(pstmt);
+//			LibraryTemplate.close(pstmt2);
 //		}
 //		
-//		return result1;	
+//		return result3;
+//	
 //	}
 	
-	public int returnBook(Connection conn, int selectKey, int selectCode) {
-		int result1 = 0;
-		int result2 = 0;
-		int result3 = 0;
+	
+	public int rentBook(Connection conn, int selectKey, int selectCode) {
+		int result = 0;
 		PreparedStatement pstmt = null;
-		PreparedStatement pstmt2 = null;
-		String sql = "UPDATE tb_human set hm_rentbookcode = 0 where hm_key = ?";
-		String sql2 = "UPDATE tb_book set BK_ISRENT = 1 where bk_code = ?";
+		String sql = "INSERT INTO TB_RENTLOG VALUES(SEQ_RENTLOG.nextval,?,?,'대여',default)";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, selectKey);
-			result1 = pstmt.executeUpdate();
+			pstmt.setInt(2, selectCode);
+			result = pstmt.executeUpdate();
 			
-			pstmt2 = conn.prepareStatement(sql2);
-			pstmt2.setInt(1, selectCode);
-			result2 = pstmt2.executeUpdate();
-			result3 = result1 + result2;
+
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			LibraryTemplate.close(pstmt);
-			LibraryTemplate.close(pstmt2);
+
 		}
 		
-		return result3;
+		return result;
+	
+	}
+	
+
+	
+	public int returnBook(Connection conn, int selectKey, int selectCode) {
+		int result = 0;
+
+		PreparedStatement pstmt = null;
+		PreparedStatement pstmt2 = null;
+		String sql = "INSERT INTO TB_RENTLOG VALUES(SEQ_RENTLOG.nextval,?,?,'반납',default)";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, selectKey);
+			pstmt.setInt(2, selectCode);
+			result = pstmt.executeUpdate();
+			
+
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			LibraryTemplate.close(pstmt);
+
+		}
+		
+		return result;
 	
 	}
 	
@@ -304,9 +361,8 @@ public class LibraryDao {
 				hm.setResidentNumber(rset.getString("hm_rnumber"));
 				hm.setAge(rset.getInt("hm_age"));
 				String str = rset.getString("hm_age");
-				char gender = str.charAt(0);
-				hm.setGender(gender);
-				hm.setRentBookCode(rset.getInt("hm_rentbookcode"));
+				hm.setGender(rset.getString("hm_gender").charAt(0));
+				
 				
 				HmList.add(hm);
 			}
@@ -336,7 +392,9 @@ public class LibraryDao {
 				bk.setTitle(rset.getString("bk_title"));
 				bk.setAuthor(rset.getString("bk_author"));
 				bk.setCode(rset.getInt("bk_code"));
+				bk.setStock(rset.getInt("bk_stock"));
 				bk.setIsRent(rset.getInt("bk_isrent"));
+			
 				
 				bkList.add(bk);
 
@@ -350,6 +408,38 @@ public class LibraryDao {
 		return bkList;
 	}
 	
+	public ArrayList<RentLog> allRentLog(Connection conn){
+		ArrayList<RentLog> rlList = new ArrayList<>();
+		RentLog rl;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String sql = "select * from tb_rentlog";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				rl = new RentLog();
+				rl.setLogNo(rset.getInt("LOG_NO"));
+				rl.setHm_rentKey(rset.getInt("HM_RENTKEY"));
+				rl.setBk_rentCode(rset.getInt("BK_RENTCODE"));
+				rl.setRentInOut(rset.getString("RENT_INOUT"));
+				String strdate = rset.getDate("ENROLLDATE").toString();
+				rl.setEnrollDate(strdate);
+			
+				
+				rlList.add(rl);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			LibraryTemplate.close(pstmt);
+		}
+		
+		return rlList;
+	}
 	
 	
 	
