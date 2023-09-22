@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class LibraryController {
 	
-	
+
+
 	
 	public void printHumanList() {
 		ArrayList<Human> HmList = new LibraryService().printHumanList();
@@ -51,8 +52,8 @@ public class LibraryController {
 		
 	}
 	
-	public void createHuman(String name, String residentNumber, int age, char gender, String admin) {
-		Human human = new Human(name, residentNumber, age, gender, admin);
+	public void createHuman(String id, String pwd,String name, String residentNumber, int age, char gender, String admin) {
+		Human human = new Human(id, pwd, name, residentNumber, age, gender, admin);
 		int result = new LibraryService().createHuman(human);
 		if (result > 0) {
 			new LibraryMenu().displaySuccess("성공적으로 회원 추가를 완료하였습니다");
@@ -108,5 +109,23 @@ public class LibraryController {
 	public ArrayList<RentLog> allRentLog(){
 		ArrayList<RentLog> rlList = new LibraryService().allRentLog();
 		return rlList;
+	}
+	
+
+//	
+//	public Boolean adminCheck() {
+//		boolean isAdmin = true;
+//		Human hm = new LibraryService().adminCheck();
+//		return isAdmin;
+//	}
+	
+	public void login(String id, String pwd) {
+		Human hum = new LibraryService().login(id, pwd);
+		if(hum == null) {
+			new LibraryMenu().displayFail("로그인 실패");
+		}else {
+			new LibraryMenu().displaySuccess("로그인 성공");
+		}
+		
 	}
 }

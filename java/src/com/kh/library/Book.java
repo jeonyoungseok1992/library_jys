@@ -100,6 +100,6 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return this.code + "\t" + this.title + "\t" + this.author + "  \t  " + this.stock + "       \t" + (this.isRent == 0 ? "대여가능": "대여불가");
+		return this.code + "\t" + this.title + "\t" + this.author + "  \t  " + this.stock + "       \t" + (this.isRent == 0 ? "가능": "불가");
 	}
 }

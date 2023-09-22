@@ -91,6 +91,7 @@ public class LibraryDao {
 					hm.setResidentNumber(rset.getString("hm_rnumber"));
 					hm.setAge(rset.getInt("hm_age"));
 					hm.setGender(rset.getString("hm_gender").charAt(0));
+					hm.setAdmin(rset.getString("hm_admin"));
 					
 
 					
@@ -204,15 +205,17 @@ public class LibraryDao {
 	public int createHuman(Connection conn, Human human) {
 		int result = 0;
 		PreparedStatement pstmt = null;
-		String sql = "insert into tb_human values(seq_human.nextval,?,?,?,?,?)";
+		String sql = "insert into tb_human values(seq_human.nextval,?,?,?,?,?,?,?)";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, human.getName());
-			pstmt.setString(2, human.getResidentNumber());
-			pstmt.setInt(3, human.getAge());
-			pstmt.setString(4, String.valueOf(human.getGender()));
-			pstmt.setString(5, human.getAdmin());
+			pstmt.setString(1, human.getId());
+			pstmt.setString(2, human.getPwd());
+			pstmt.setString(3, human.getName());
+			pstmt.setString(4, human.getResidentNumber());
+			pstmt.setInt(5, human.getAge());
+			pstmt.setString(6, String.valueOf(human.getGender()));
+			pstmt.setString(7, human.getAdmin());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -439,6 +442,66 @@ public class LibraryDao {
 		}
 		
 		return rlList;
+	}
+	
+//	public Human adminCheck() {
+//		Human hm = new Human();
+//		PreparedStatement pstmt = null;
+//		ResultSet rset = null;
+//		String sql = "select";			
+//		try {
+//			pstmt = conn.prepareStatement(sql);
+//			rset = pstmt.executeQuery();
+//			
+//			while(rset.next()) {
+//				rl = new RentLog();
+//				rl.setLogNo(rset.getInt("LOG_NO"));
+//				rl.setHm_rentKey(rset.getInt("HM_RENTKEY"));
+//				rl.setBk_rentCode(rset.getInt("BK_RENTCODE"));
+//				rl.setRentInOut(rset.getString("RENT_INOUT"));
+//				String strdate = rset.getDate("ENROLLDATE").toString();
+//				rl.setEnrollDate(strdate);
+//			
+//				
+//				rlList.add(rl);
+//
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			LibraryTemplate.close(pstmt);
+//		}
+//		
+//		return rlList;
+//		
+//	}
+	
+	public Human login(Connection conn, String id, String pwd) {
+		Human hm = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String sql = "select * from tb_human where hm_id = ? and hm_pwd = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setString(2, pwd);
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				hm = new Human();
+//				hm.setId(rset.getString("hm_id"));
+//				hm.setPwd(rset.getString("hm_pwd"));		
+				hm.setAdmin(rset.getString("hm_admin"));	
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			LibraryTemplate.close(pstmt);
+		}
+		
+		return hm;
 	}
 	
 	

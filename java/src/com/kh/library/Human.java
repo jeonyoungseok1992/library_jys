@@ -3,6 +3,8 @@ package com.kh.library;
 
 public class Human {
 	private int key; 
+	private String id;
+	private String pwd;
 	private String name;
 	private String residentNumber;
 	private int age;
@@ -14,6 +16,42 @@ public class Human {
 		
 	}
 	
+
+
+
+	Human(String id, String pwd,String name , String residentNumber, int age, char gender, String admin){
+		this.age = age;
+		this.id = id;
+		this.pwd = pwd;
+		this.name = name;
+		this.residentNumber = residentNumber;
+		this.gender = gender;
+		this.admin = admin;
+	}
+	
+
+	public String getId() {
+		return id;
+	}
+
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+
+
+	public String getPwd() {
+		return pwd;
+	}
+
+
+
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
+
 	public String getAdmin() {
 		return admin;
 	}
@@ -21,16 +59,6 @@ public class Human {
 	public void setAdmin(String admin) {
 		this.admin = admin;
 	}
-
-	Human(String name , String residentNumber, int age, char gender, String admin){
-		this.age = age;
-		this.name = name;
-		this.residentNumber = residentNumber;
-		this.gender = gender;
-		this.admin = admin;
-	}
-
-
 
 	
 	public int getKey() {
@@ -79,7 +107,7 @@ public class Human {
 	public String toString() {
 		return this.key + "\t" + this.name + "\t" + 
 				this.residentNumber + "\t" + this.age + 
-				"\t" + this.gender + "\t" 
+				"\t" + this.gender + "\t" + this.admin
 				;
 	}
 }

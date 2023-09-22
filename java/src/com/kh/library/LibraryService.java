@@ -7,8 +7,14 @@ import java.util.ArrayList;
 
 public class LibraryService {
 	
-
 	
+
+//	Human hum = new Human();
+	static Human hum = null;
+//	Human hum;
+
+
+
 	public ArrayList<Human> printHumanList(){
 		ArrayList<Human> HmList = new LibraryDao().printHumanList();
 		
@@ -119,5 +125,23 @@ public class LibraryService {
 		ArrayList<RentLog> rlList = new LibraryDao().allRentLog(conn);
 		LibraryTemplate.close(conn);
 		return rlList;
+	}
+	
+//	public Human adminCheck() {
+//		Connection conn = LibraryTemplate.getConnection();
+//		hm = new LibraryDao().adminCheck(conn);
+//		
+//		LibraryTemplate.close(conn);
+//		return hm;
+//	}
+	
+	public Human login(String id, String pwd) {
+		Connection conn = LibraryTemplate.getConnection();
+		Human hu = new LibraryDao().login(conn ,id, pwd);	
+		hum = hu;
+		
+		LibraryTemplate.close(conn);
+		
+		return hum;
 	}
 }
