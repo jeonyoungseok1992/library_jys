@@ -1,6 +1,6 @@
 package com.kh.library;
 
-//Book객체를 만들기위한 클레스
+
 public class Book {
 	private int code;
 	private String title;
@@ -100,6 +100,6 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return this.code + "\t" + this.title + "\t" + this.author + "  \t  " + this.stock + "       \t" + (this.isRent == 0 ? "가능": "불가");
+		return this.code + "\t" + this.title + "\t" + this.author + "  \t  " + this.stock + "\t\t" + (this.isRent == 0 ? "대여가능": "대여불가");
 	}
 }

@@ -89,7 +89,6 @@ public class LibraryDao {
 					hm.setKey(rset.getInt("HM_KEY"));
 					hm.setName(rset.getString("hm_name"));
 					hm.setResidentNumber(rset.getString("hm_rnumber"));
-					hm.setAge(rset.getInt("hm_age"));
 					hm.setGender(rset.getString("hm_gender").charAt(0));
 					hm.setAdmin(rset.getString("hm_admin"));
 					
@@ -205,7 +204,7 @@ public class LibraryDao {
 	public int createHuman(Connection conn, Human human) {
 		int result = 0;
 		PreparedStatement pstmt = null;
-		String sql = "insert into tb_human values(seq_human.nextval,?,?,?,?,?,?,?)";
+		String sql = "insert into tb_human values(seq_human.nextval,?,?,?,?,?,?)";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -213,9 +212,8 @@ public class LibraryDao {
 			pstmt.setString(2, human.getPwd());
 			pstmt.setString(3, human.getName());
 			pstmt.setString(4, human.getResidentNumber());
-			pstmt.setInt(5, human.getAge());
-			pstmt.setString(6, String.valueOf(human.getGender()));
-			pstmt.setString(7, human.getAdmin());
+			pstmt.setString(5, String.valueOf(human.getGender()));
+			pstmt.setString(6, human.getAdmin());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -296,40 +294,39 @@ public class LibraryDao {
 //	}
 	
 	
-	public int rentBook(Connection conn, int selectKey, int selectCode) {
+	public int rentBook(Connection conn, Human hum, int selectCode) {
+		Human hm = new Human();
 		int result = 0;
+		ResultSet rset = null;
 		PreparedStatement pstmt = null;
-		String sql = "INSERT INTO TB_RENTLOG VALUES(SEQ_RENTLOG.nextval,?,?,'대여',default)";
+		Statement stmt = null;
+		String sql = "INSERT INTO TB_RENTLOG VALUES(SEQ_RENTLOG.nextval,?,?,'대여',default,null,default)";
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, selectKey);
+			pstmt.setInt(1, hum.getKey());
 			pstmt.setInt(2, selectCode);
 			result = pstmt.executeUpdate();
 			
 
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			LibraryTemplate.close(pstmt);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        LibraryTemplate.close(stmt);
+	    }
 
-		}
-		
-		return result;
-	
+	    return result;
 	}
 	
 
 	
-	public int returnBook(Connection conn, int selectKey, int selectCode) {
+	public int returnBook(Connection conn,Human hum, int selectCode) {
 		int result = 0;
 
 		PreparedStatement pstmt = null;
-		PreparedStatement pstmt2 = null;
-		String sql = "INSERT INTO TB_RENTLOG VALUES(SEQ_RENTLOG.nextval,?,?,'반납',default)";
+		String sql = "INSERT INTO TB_RENTLOG VALUES(SEQ_RENTLOG.nextval,?,?,'반납',default,null,1)";
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, selectKey);
+			pstmt.setInt(1, hum.getKey());
 			pstmt.setInt(2, selectCode);
 			result = pstmt.executeUpdate();
 			
@@ -362,8 +359,7 @@ public class LibraryDao {
 				hm.setKey(rset.getInt("hm_key"));
 				hm.setName(rset.getString("hm_name"));
 				hm.setResidentNumber(rset.getString("hm_rnumber"));
-				hm.setAge(rset.getInt("hm_age"));
-				String str = rset.getString("hm_age");
+				//String str = rset.getString("hm_age");
 				hm.setGender(rset.getString("hm_gender").charAt(0));
 				
 				
@@ -384,10 +380,43 @@ public class LibraryDao {
 		Book bk;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String sql = "select * from tb_book";
+		String sql = "select * from tb_book where bk_isrent = 0";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				bk = new Book();
+				bk.setTitle(rset.getString("bk_title"));
+				bk.setAuthor(rset.getString("bk_author"));
+				bk.setCode(rset.getInt("bk_code"));
+				bk.setStock(rset.getInt("bk_stock"));
+				bk.setIsRent(rset.getInt("bk_isrent"));
+			
+				
+				bkList.add(bk);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			LibraryTemplate.close(pstmt);
+		}
+		
+		return bkList;
+	}
+	
+	public ArrayList<Book> allrentBook(Connection conn, Human hum){
+		ArrayList<Book> bkList = new ArrayList<>();
+		Book bk;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String sql = "select * from tb_book join tb_rentlog on (bk_rentcode = bk_code) join tb_human on (hm_key = hm_rentkey) where bk_isrent = 1 and hm_key = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, hum.getKey());
 			rset = pstmt.executeQuery();
 			
 			while(rset.next()) {
@@ -416,20 +445,26 @@ public class LibraryDao {
 		RentLog rl;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String sql = "select * from tb_rentlog";
-		
+		//ResultSet rset2 = null;
+		String sql = "select hm_key, hm_name, bk_code, BK_TITLE, rent_inout, ENROLLDATE, to_number((TO_CHAR(SYSDATE, 'hh24MISS')- TO_CHAR(ENROLLDATE, 'hh24MISS')))*1 as fee from tb_human join tb_rentlog on (hm_key = hm_rentkey) join tb_book on (bk_rentcode = bk_code)";
+		//String sql2 = "select hm_key, hm_name, bk_code, BK_TITLE, rent_inout, ENROLLDATE from tb_human join tb_rentlog on (hm_key = hm_rentkey) join tb_book on (bk_rentcode = bk_code)";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rset = pstmt.executeQuery();
+//			pstmt = conn.prepareStatement(sql2);
+//			rset2 = pstmt.executeQuery();
 			
 			while(rset.next()) {
 				rl = new RentLog();
-				rl.setLogNo(rset.getInt("LOG_NO"));
-				rl.setHm_rentKey(rset.getInt("HM_RENTKEY"));
-				rl.setBk_rentCode(rset.getInt("BK_RENTCODE"));
-				rl.setRentInOut(rset.getString("RENT_INOUT"));
-				String strdate = rset.getDate("ENROLLDATE").toString();
+				//rl.setLogNo(rset.getInt("LOG_NO"));
+				rl.setHm_rentKey(rset.getInt(1));
+				rl.setHm_name(rset.getString(2));
+				rl.setBk_rentCode(rset.getInt(3));
+				rl.setBK_TITLE(rset.getString(4));
+				rl.setRentInOut(rset.getString(5));
+				String strdate = rset.getDate(6).toString();
 				rl.setEnrollDate(strdate);
+				rl.setFee(rset.getInt(7));
 			
 				
 				rlList.add(rl);
@@ -490,18 +525,90 @@ public class LibraryDao {
 			
 			while(rset.next()) {
 				hm = new Human();
-//				hm.setId(rset.getString("hm_id"));
-//				hm.setPwd(rset.getString("hm_pwd"));		
-				hm.setAdmin(rset.getString("hm_admin"));	
+				hm.setKey(rset.getInt("HM_KEY"));
+				hm.setName(rset.getString("hm_name"));
+				hm.setResidentNumber(rset.getString("hm_rnumber"));
+				hm.setGender(rset.getString("hm_gender").charAt(0));
+				hm.setAdmin(rset.getString("hm_admin"));
+				hm.setId(rset.getString("hm_id"));
+				hm.setPwd(rset.getString("hm_pwd"));		
+	
 
 			}
 		} catch (SQLException e) {
+			System.out.println("조회결과가 없습니다");
 			e.printStackTrace();
 		} finally {
 			LibraryTemplate.close(pstmt);
 		}
 		
 		return hm;
+	}
+	
+	public ArrayList<Book> searchBook(Connection conn, String str){
+		ArrayList<Book> bkList =  new ArrayList<>();
+		Book bk = null;
+		PreparedStatement pst = null;
+		ResultSet rset = null;
+		String sql = "select * from tb_book where bk_title like ?";
+		try {
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, "%" + str + "%");
+			rset = pst.executeQuery();
+			
+			while(rset.next()) {
+				bk = new Book();
+				bk.setCode(rset.getInt("bk_code"));
+				bk.setTitle(rset.getString("bk_title"));
+				bk.setAuthor(rset.getString("bk_author"));
+				bk.setStock(rset.getInt("bk_stock"));
+				bk.setIsRent(rset.getInt("bk_isrent"));
+			
+				
+				bkList.add(bk);
+				
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			LibraryTemplate.close(pst);
+		}
+		
+		return bkList;
+		
+		
+	}
+	
+	public void rentBookList(Connection conn, Human hum) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = "select BK_TITLE, ENROLLDATE, to_number((TO_CHAR(SYSDATE, 'hh24MISS')- TO_CHAR(ENROLLDATE, 'hh24MISS')))*1 from tb_human join tb_rentlog on (hm_key = hm_rentkey) join tb_book on (bk_rentcode = bk_code) where hm_key = ? and delete_log = 0";
+
+		try {
+			pstmt = conn.prepareStatement(sql);	
+			pstmt.setInt(1,hum.getKey());
+			rset = pstmt.executeQuery();
+	        if (!rset.next()) {
+	            System.out.println("대여중인 도서가 없습니다");
+	        } else {
+	        	System.out.println("책이름\t대여일\t\t연체료");
+	            do {
+	                String strdate = rset.getDate("enrolldate").toString();           
+	                System.out.println(rset.getString("bk_title")+"\t" + strdate +"\t"+ rset.getInt(3)+"원");
+	            } while (rset.next());
+	        }
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		finally {
+			LibraryTemplate.close(pstmt);
+		}
+		
+
+		
 	}
 	
 	

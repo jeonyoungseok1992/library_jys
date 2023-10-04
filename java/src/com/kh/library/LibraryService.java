@@ -30,7 +30,8 @@ public class LibraryService {
 	}
 	
 	public ArrayList<RentLog> printRentLog(){
-		ArrayList<RentLog> rlList = new LibraryDao().printRentLog();
+		Connection conn = LibraryTemplate.getConnection();
+		ArrayList<RentLog> rlList = new LibraryDao().allRentLog(conn);
 		
 		return rlList;
 		
@@ -83,9 +84,9 @@ public class LibraryService {
 		return result;
 	}
 	
-	public int rentBook(int selectKey, int selectCode) {
+	public int rentBook(int selectCode) {
 		Connection conn = LibraryTemplate.getConnection();
-		int result = new LibraryDao().rentBook(conn, selectKey, selectCode);
+		int result = new LibraryDao().rentBook(conn, hum, selectCode);
 		LibraryTemplate.close(conn);
 		if(result > 0) {
 			LibraryTemplate.commit(conn);
@@ -94,9 +95,9 @@ public class LibraryService {
 		return result;
 	}
 	
-	public int returnBook(int selectKey, int selectCode) {
+	public int returnBook(int selectCode) {
 		Connection conn = LibraryTemplate.getConnection();
-		int result3 = new LibraryDao().returnBook(conn, selectKey, selectCode);
+		int result3 = new LibraryDao().returnBook(conn, hum, selectCode);
 		LibraryTemplate.close(conn);
 		if(result3 > 0) {
 			LibraryTemplate.commit(conn);
@@ -116,6 +117,13 @@ public class LibraryService {
 	public ArrayList<Book> allBook(){
 		Connection conn = LibraryTemplate.getConnection();
 		ArrayList<Book> bkList = new LibraryDao().allBook(conn);
+		LibraryTemplate.close(conn);
+		return bkList;
+	}
+	
+	public ArrayList<Book> allrentBook(){
+		Connection conn = LibraryTemplate.getConnection();
+		ArrayList<Book> bkList = new LibraryDao().allrentBook(conn, hum);
 		LibraryTemplate.close(conn);
 		return bkList;
 	}
@@ -143,5 +151,28 @@ public class LibraryService {
 		LibraryTemplate.close(conn);
 		
 		return hum;
+	}
+	
+	public ArrayList<Book> searchBook(String str){
+		Connection conn = LibraryTemplate.getConnection();
+		ArrayList<Book> bkList = new LibraryDao().searchBook(conn, str);
+		LibraryTemplate.close(conn);
+		return bkList;
+			
+		
+	}
+	
+	public void rentBookList() {
+		Connection conn = LibraryTemplate.getConnection();
+		//int result = 
+		new LibraryDao().rentBookList(conn, hum);
+//		LibraryTemplate.close(conn);
+//		if(result > 0) {
+//			LibraryTemplate.commit(conn);
+//		}else
+//			LibraryTemplate.rollback(conn);
+		
+
+		
 	}
 }

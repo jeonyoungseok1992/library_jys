@@ -52,8 +52,8 @@ public class LibraryController {
 		
 	}
 	
-	public void createHuman(String id, String pwd,String name, String residentNumber, int age, char gender, String admin) {
-		Human human = new Human(id, pwd, name, residentNumber, age, gender, admin);
+	public void createHuman(String id, String pwd,String name, String residentNumber, char gender, String admin) {
+		Human human = new Human(id, pwd, name, residentNumber, gender, admin);
 		int result = new LibraryService().createHuman(human);
 		if (result > 0) {
 			new LibraryMenu().displaySuccess("성공적으로 회원 추가를 완료하였습니다");
@@ -78,8 +78,8 @@ public class LibraryController {
 			new LibraryMenu().displayFail("회원 삭제에 실패하였습니다");
 	}
 	
-	public void rentBook(int selectKey, int selectCode ) {
-		int result = new LibraryService().rentBook(selectKey, selectCode);
+	public void rentBook(int selectCode ) {
+		int result = new LibraryService().rentBook(selectCode);
 		if (result > 0) {
 			new LibraryMenu().displaySuccess("성공적으로 도서 대여를 완료하였습니다");
 		}else
@@ -87,8 +87,8 @@ public class LibraryController {
 
 	}
 	
-	public void returnBook(int selectKey, int selectCode ) {
-		int result = new LibraryService().returnBook(selectKey, selectCode);
+	public void returnBook(int selectCode ) {
+		int result = new LibraryService().returnBook(selectCode);
 		if (result > 0) {
 			new LibraryMenu().displaySuccess("성공적으로 도서 반납을 완료하였습니다");
 		}else
@@ -105,10 +105,15 @@ public class LibraryController {
 		ArrayList<Book> bkList = new LibraryService().allBook();
 		return bkList;
 	}
+	public ArrayList<Book> allrentBook(){
+		ArrayList<Book> bkList = new LibraryService().allrentBook();
+		return bkList;
+	}
 	
 	public ArrayList<RentLog> allRentLog(){
 		ArrayList<RentLog> rlList = new LibraryService().allRentLog();
 		return rlList;
+
 	}
 	
 
@@ -128,4 +133,21 @@ public class LibraryController {
 		}
 		
 	}
-}
+	
+	public void searchBook(String str){
+		ArrayList<Book> bkList = new LibraryService().searchBook(str);
+		if(bkList.isEmpty()) {
+			new LibraryMenu().displayFail("검색결과가 없습니다");
+		}else {
+			new LibraryMenu().displayBookList(bkList);
+			
+		}
+	}
+	
+	public void rentBookList() {
+		new LibraryService().rentBookList();
+
+		
+	}
+		
+	}

@@ -7,11 +7,40 @@ public class Human {
 	private String pwd;
 	private String name;
 	private String residentNumber;
-	private int age;
 	private char gender;
+	private int lateFee;
 	private String admin;
+	private String rentStatus;
 
 	
+	public int getLateFee() {
+		return lateFee;
+	}
+
+
+
+
+	public void setLateFee(int lateFee) {
+		this.lateFee = lateFee;
+	}
+
+
+
+
+	public String getRentStatus() {
+		return rentStatus;
+	}
+
+
+
+
+	public void setRentStatus(String rentStatus) {
+		this.rentStatus = rentStatus;
+	}
+
+
+
+
 	public Human() {
 		
 	}
@@ -19,8 +48,7 @@ public class Human {
 
 
 
-	Human(String id, String pwd,String name , String residentNumber, int age, char gender, String admin){
-		this.age = age;
+	Human(String id, String pwd,String name , String residentNumber,char gender, String admin){
 		this.id = id;
 		this.pwd = pwd;
 		this.name = name;
@@ -85,13 +113,7 @@ public class Human {
 		this.residentNumber = residentNumber;
 	}
 
-	public int getAge() {
-		return age;
-	}
 
-	public void setAge(int age) {
-		this.age = age;
-	}
 
 	public char getGender() {
 		return gender;
@@ -106,8 +128,8 @@ public class Human {
 	@Override
 	public String toString() {
 		return this.key + "\t" + this.name + "\t" + 
-				this.residentNumber + "\t" + this.age + 
-				"\t" + this.gender + "\t" + this.admin
+				this.residentNumber +
+				"\t" +  this.gender + "\t" + this.admin
 				;
 	}
 }
